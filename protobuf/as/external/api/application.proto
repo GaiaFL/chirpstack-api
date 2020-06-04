@@ -202,6 +202,37 @@ service ApplicationService {
 			get: "/api/applications/{application_id}/integrations"
 		};
 	}
+
+	// CreateKonkerIntegration creates A Konker application-integration.
+	rpc CreateKonkerIntegration(CreateKonkerIntegrationRequest) returns (google.protobuf.Empty) {
+		option(google.api.http) = {
+			post: "/api/applications/{integration.application_id}/integrations/konker"
+			body: "*"
+		};
+	}
+	
+		// GetKonkerIntegration returns the Konker application-integration.
+	rpc GetKonkerIntegration(GetKonkerIntegrationRequest) returns (GetKonkerIntegrationResponse) {
+		option(google.api.http) = {
+			get: "/api/applications/{application_id}/integrations/konker"
+		};
+	}
+	
+		// UpdateKonkerIntegration updates the Konker application-integration.
+	rpc UpdateKonkerIntegration(UpdateKonkerIntegrationRequest) returns (google.protobuf.Empty) {
+		option(google.api.http) = {
+			put: "/api/applications/{integration.application_id}/integrations/konker"
+			body: "*"
+		};
+	}
+	
+		// DeleteKonkerIntegration deletes the Konker application-integration.
+	rpc DeleteKonkerIntegration(DeleteKonkerIntegrationRequest) returns (google.protobuf.Empty) {
+		option(google.api.http) = {
+			delete: "/api/applications/{application_id}/integrations/konker"
+		};
+	}
+	
 }
 
 enum IntegrationKind {
@@ -209,7 +240,8 @@ enum IntegrationKind {
 	INFLUXDB = 1;
     THINGSBOARD = 2;
     MYDEVICES = 3;
-    LORACLOUD = 4;
+	LORACLOUD = 4;
+	KONKER = 5;
 }
 
 message Application {
@@ -380,6 +412,68 @@ message UpdateHTTPIntegrationRequest {
 }
 
 message DeleteHTTPIntegrationRequest {
+	// The id of the application.
+	int64 application_id = 1 [json_name = "applicationID"];
+}
+
+message KonkerIntegrationHeader {
+	// Key
+	string key = 1;
+
+	// Value
+	string value = 2;
+}
+
+message KonkerIntegration {
+	// The id of the application.
+	int64 application_id = 1 [json_name = "applicationID"];
+
+	// The headers to use when making HTTP callbacks.
+	repeated KonkerIntegrationHeader headers = 2;
+
+	// The URL to call for uplink data.
+	string uplink_data_url = 3 [json_name = "uplinkDataURL"];
+
+	// The URL to call for join notifications.
+	string join_notification_url = 4 [json_name = "joinNotificationURL"];
+
+	// The URL to call for ACK notifications (for confirmed downlink data).
+	string ack_notification_url = 5 [json_name = "ackNotificationURL"];
+
+	// The URL to call for error notifications.
+	string error_notification_url = 6 [json_name = "errorNotificationURL"];
+
+	// The URL to call for device-status notifications.
+	string status_notification_url = 7 [json_name = "statusNotificationURL"];
+
+	// The URL to call for location notifications.
+	string location_notification_url = 8 [json_name = "locationNotificationURL"];
+
+    // The URL to call for tx ack notifications (downlink acknowledged by gateway for transmission).
+    string tx_ack_notification_url = 9 [json_name = "txAckNotificationURL"];
+}
+
+message CreateKonkerIntegrationRequest {
+	// Integration object to create.
+	KonkerIntegration integration = 1;
+}
+
+message GetKonkerIntegrationRequest {
+	// Application ID.
+	int64 application_id = 1 [json_name = "applicationID"];
+}
+
+message GetKonkerIntegrationResponse {
+	// Integration object.
+	KonkerIntegration integration = 1;
+}
+
+message UpdateKonkerIntegrationRequest {
+	// Integration object to update.
+	KonkerIntegration integration = 1;
+}
+
+message DeleteKonkerIntegrationRequest {
 	// The id of the application.
 	int64 application_id = 1 [json_name = "applicationID"];
 }
