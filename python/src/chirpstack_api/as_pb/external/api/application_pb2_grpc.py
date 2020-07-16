@@ -61,6 +61,26 @@ class ApplicationServiceStub(object):
                 request_serializer=chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.DeleteHTTPIntegrationRequest.SerializeToString,
                 response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
                 )
+        self.CreateKonkerIntegration = channel.unary_unary(
+                '/api.ApplicationService/CreateKonkerIntegration',
+                request_serializer=chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.CreateKonkerIntegrationRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.GetKonkerIntegration = channel.unary_unary(
+                '/api.ApplicationService/GetKonkerIntegration',
+                request_serializer=chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.GetKonkerIntegrationRequest.SerializeToString,
+                response_deserializer=chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.GetKonkerIntegrationResponse.FromString,
+                )
+        self.UpdateKonkerIntegration = channel.unary_unary(
+                '/api.ApplicationService/UpdateKonkerIntegration',
+                request_serializer=chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.UpdateKonkerIntegrationRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
+        self.DeleteKonkerIntegration = channel.unary_unary(
+                '/api.ApplicationService/DeleteKonkerIntegration',
+                request_serializer=chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.DeleteKonkerIntegrationRequest.SerializeToString,
+                response_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                )
         self.CreateInfluxDBIntegration = channel.unary_unary(
                 '/api.ApplicationService/CreateInfluxDBIntegration',
                 request_serializer=chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.CreateInfluxDBIntegrationRequest.SerializeToString,
@@ -270,6 +290,34 @@ class ApplicationServiceServicer(object):
 
     def DeleteHTTPIntegration(self, request, context):
         """DeleteIntegration deletes the HTTP application-integration.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def CreateKonkerIntegration(self, request, context):
+        """CreateKonkerIntegration creates a Konker application-integration.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetKonkerIntegration(self, request, context):
+        """GetKonkerIntegration returns the Konker application-integration.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def UpdateKonkerIntegration(self, request, context):
+        """UpdateKonkerIntegration updates the Konker application-integration.
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def DeleteKonkerIntegration(self, request, context):
+        """DeleteIntegration deletes the Konker application-integration.
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -524,6 +572,26 @@ def add_ApplicationServiceServicer_to_server(servicer, server):
             'DeleteHTTPIntegration': grpc.unary_unary_rpc_method_handler(
                     servicer.DeleteHTTPIntegration,
                     request_deserializer=chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.DeleteHTTPIntegrationRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'CreateKonkerIntegration': grpc.unary_unary_rpc_method_handler(
+                    servicer.CreateKonkerIntegration,
+                    request_deserializer=chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.CreateKonkerIntegrationRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'GetKonkerIntegration': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetKonkerIntegration,
+                    request_deserializer=chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.GetKonkerIntegrationRequest.FromString,
+                    response_serializer=chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.GetKonkerIntegrationResponse.SerializeToString,
+            ),
+            'UpdateKonkerIntegration': grpc.unary_unary_rpc_method_handler(
+                    servicer.UpdateKonkerIntegration,
+                    request_deserializer=chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.UpdateKonkerIntegrationRequest.FromString,
+                    response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            ),
+            'DeleteKonkerIntegration': grpc.unary_unary_rpc_method_handler(
+                    servicer.DeleteKonkerIntegration,
+                    request_deserializer=chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.DeleteKonkerIntegrationRequest.FromString,
                     response_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
             ),
             'CreateInfluxDBIntegration': grpc.unary_unary_rpc_method_handler(
@@ -822,6 +890,70 @@ class ApplicationService(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/api.ApplicationService/DeleteHTTPIntegration',
             chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.DeleteHTTPIntegrationRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def CreateKonkerIntegration(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/api.ApplicationService/CreateKonkerIntegration',
+            chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.CreateKonkerIntegrationRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def GetKonkerIntegration(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/api.ApplicationService/GetKonkerIntegration',
+            chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.GetKonkerIntegrationRequest.SerializeToString,
+            chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.GetKonkerIntegrationResponse.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def UpdateKonkerIntegration(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/api.ApplicationService/UpdateKonkerIntegration',
+            chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.UpdateKonkerIntegrationRequest.SerializeToString,
+            google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+            options, channel_credentials,
+            call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def DeleteKonkerIntegration(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/api.ApplicationService/DeleteKonkerIntegration',
+            chirpstack__api_dot_as__pb_dot_external_dot_api_dot_application__pb2.DeleteKonkerIntegrationRequest.SerializeToString,
             google_dot_protobuf_dot_empty__pb2.Empty.FromString,
             options, channel_credentials,
             call_credentials, compression, wait_for_ready, timeout, metadata)
