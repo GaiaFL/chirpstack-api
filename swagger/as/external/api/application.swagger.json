@@ -412,6 +412,58 @@
         ]
       }
     },
+    "/api/applications/{application_id}/integrations/konker": {
+      "get": {
+        "summary": "GetKonkerIntegration returns the Konker application-integration.",
+        "operationId": "GetKonkerIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetKonkerIntegrationResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "application_id",
+            "description": "Application ID.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      },
+      "delete": {
+        "summary": "DeleteIntegration deletes the Konker application-integration.",
+        "operationId": "DeleteKonkerIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "application_id",
+            "description": "The id of the application.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      }
+    },
     "/api/applications/{application_id}/integrations/loracloud": {
       "get": {
         "summary": "GetLoRaCloudIntegration returns the LoRaCloud application-integration.",
@@ -960,6 +1012,74 @@
         ]
       }
     },
+    "/api/applications/{integration.application_id}/integrations/konker": {
+      "post": {
+        "summary": "CreateKonkerIntegration creates a Konker application-integration.",
+        "operationId": "CreateKonkerIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "integration.application_id",
+            "description": "The id of the application.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiCreateKonkerIntegrationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      },
+      "put": {
+        "summary": "UpdateKonkerIntegration updates the Konker application-integration.",
+        "operationId": "UpdateKonkerIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "integration.application_id",
+            "description": "The id of the application.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiUpdateKonkerIntegrationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      }
+    },
     "/api/applications/{integration.application_id}/integrations/loracloud": {
       "post": {
         "summary": "CreateLoRaCloudIntegration creates A LoRaCloud application-integration.",
@@ -1352,6 +1472,15 @@
         }
       }
     },
+    "apiCreateKonkerIntegrationRequest": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "$ref": "#/definitions/apiKonkerIntegration",
+          "description": "Integration object to create."
+        }
+      }
+    },
     "apiCreateLoRaCloudIntegrationRequest": {
       "type": "object",
       "properties": {
@@ -1455,6 +1584,15 @@
       "properties": {
         "integration": {
           "$ref": "#/definitions/apiInfluxDBIntegration",
+          "description": "Integration object."
+        }
+      }
+    },
+    "apiGetKonkerIntegrationResponse": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "$ref": "#/definitions/apiKonkerIntegration",
           "description": "Integration object."
         }
       }
@@ -1612,7 +1750,8 @@
         "LORACLOUD",
         "GCP_PUBSUB",
         "AWS_SNS",
-        "AZURE_SERVICE_BUS"
+        "AZURE_SERVICE_BUS",
+        "KONKER"
       ],
       "default": "HTTP"
     },
@@ -1622,6 +1761,76 @@
         "kind": {
           "$ref": "#/definitions/apiIntegrationKind",
           "description": "Integration kind."
+        }
+      }
+    },
+    "apiKonkerIntegration": {
+      "type": "object",
+      "properties": {
+        "applicationID": {
+          "type": "string",
+          "format": "int64",
+          "description": "The id of the application."
+        },
+        "headers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/apiKonkerIntegrationHeader"
+          },
+          "description": "The headers to use when making Konker callbacks."
+        },
+        "uplinkDataURL": {
+          "type": "string",
+          "description": "The URL to call for uplink data.\nDeprecated: use event_endpoint_url."
+        },
+        "joinNotificationURL": {
+          "type": "string",
+          "description": "The URL to call for join notifications.\nDeprecated: use event_endpoint_url."
+        },
+        "ackNotificationURL": {
+          "type": "string",
+          "description": "The URL to call for ACK notifications (for confirmed downlink data).\nDeprecated: use event_endpoint_url."
+        },
+        "errorNotificationURL": {
+          "type": "string",
+          "description": "The URL to call for error notifications.\nDeprecated: use event_endpoint_url."
+        },
+        "statusNotificationURL": {
+          "type": "string",
+          "description": "The URL to call for device-status notifications.\nDeprecated: use event_endpoint_url."
+        },
+        "locationNotificationURL": {
+          "type": "string",
+          "description": "The URL to call for location notifications.\nDeprecated: use event_endpoint_url."
+        },
+        "txAckNotificationURL": {
+          "type": "string",
+          "description": "The URL to call for tx ack notifications (downlink acknowledged by gateway for transmission).\nDeprecated: use event_endpoint_url."
+        },
+        "integrationNotificationURL": {
+          "type": "string",
+          "description": "The URL to call for integration notifications.\nDeprecated: use event_endpoint_url."
+        },
+        "marshaler": {
+          "$ref": "#/definitions/apiMarshaler",
+          "description": "Marshaler.\nThis defines the marshaler that is used to encode the event payload."
+        },
+        "eventEndpointURL": {
+          "type": "string",
+          "description": "Event endpoint URL.\nThe Konker integration will POST all events to this enpoint. The request\nwill contain a query parameters \"eventType\" containing the type of the\nevent."
+        }
+      }
+    },
+    "apiKonkerIntegrationHeader": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string",
+          "title": "Key"
+        },
+        "value": {
+          "type": "string",
+          "title": "Value"
         }
       }
     },
@@ -1823,6 +2032,15 @@
         "integration": {
           "$ref": "#/definitions/apiInfluxDBIntegration",
           "description": "Integration object."
+        }
+      }
+    },
+    "apiUpdateKonkerIntegrationRequest": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "$ref": "#/definitions/apiKonkerIntegration",
+          "description": "Integration object to update."
         }
       }
     },
