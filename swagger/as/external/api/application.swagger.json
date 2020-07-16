@@ -152,6 +152,162 @@
         ]
       }
     },
+    "/api/applications/{application_id}/integrations/aws-sns": {
+      "get": {
+        "summary": "GetAWSSNSIntegration returns the AWS SNS application-integration.",
+        "operationId": "GetAWSSNSIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetAWSSNSIntegrationResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "application_id",
+            "description": "Application ID.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      },
+      "delete": {
+        "summary": "DeleteAWSSNSIntegration deletes the AWS SNS application-integration.",
+        "operationId": "DeleteAWSSNSIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "application_id",
+            "description": "The id of the application.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      }
+    },
+    "/api/applications/{application_id}/integrations/azure-service-bus": {
+      "get": {
+        "summary": "GetAzureServiceBusIntegration returns the Azure Service-Bus application-integration.",
+        "operationId": "GetAzureServiceBusIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetAzureServiceBusIntegrationResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "application_id",
+            "description": "Application ID.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      },
+      "delete": {
+        "summary": "DeleteAzureServiceBusIntegration deletes the Azure Service-Bus application-integration.",
+        "operationId": "DeleteAzureServiceBusIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "application_id",
+            "description": "The id of the application.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      }
+    },
+    "/api/applications/{application_id}/integrations/gcp-pub-sub": {
+      "get": {
+        "summary": "GetGCPPubSubIntegration returns the GCP PubSub application-integration.",
+        "operationId": "GetGCPPubSubIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiGetGCPPubSubIntegrationResponse"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "application_id",
+            "description": "Application ID.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      },
+      "delete": {
+        "summary": "DeleteGCPPubSubIntegration deletes the GCP PubSub application-integration.",
+        "operationId": "DeleteGCPPubSubIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "application_id",
+            "description": "The id of the application.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      }
+    },
     "/api/applications/{application_id}/integrations/http": {
       "get": {
         "summary": "GetHTTPIntegration returns the HTTP application-integration.",
@@ -245,58 +401,6 @@
           {
             "name": "application_id",
             "description": "Application ID.",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "ApplicationService"
-        ]
-      }
-    },
-    "/api/applications/{application_id}/integrations/konker": {
-      "get": {
-        "summary": "GetKonkerIntegration returns the Konker application-integration.",
-        "operationId": "GetKonkerIntegration",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiGetKonkerIntegrationResponse"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "application_id",
-            "description": "Application ID.",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          }
-        ],
-        "tags": [
-          "ApplicationService"
-        ]
-      },
-      "delete": {
-        "summary": "DeleteKonkerIntegration deletes the Konker application-integration.",
-        "operationId": "DeleteKonkerIntegration",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "application_id",
-            "description": "The id of the application.",
             "in": "path",
             "required": true,
             "type": "string",
@@ -516,6 +620,210 @@
         ]
       }
     },
+    "/api/applications/{integration.application_id}/integrations/aws-sns": {
+      "post": {
+        "summary": "CreateAWSSNSIntegration creates a AWS SNS application-integration.",
+        "operationId": "CreateAWSSNSIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "integration.application_id",
+            "description": "Application ID.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiCreateAWSSNSIntegrationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      },
+      "put": {
+        "summary": "UpdateAWSSNSIntegration updates the AWS SNS application-integration.",
+        "operationId": "UpdateAWSSNSIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "integration.application_id",
+            "description": "Application ID.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiUpdateAWSSNSIntegrationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      }
+    },
+    "/api/applications/{integration.application_id}/integrations/azure-service-bus": {
+      "post": {
+        "summary": "CreateAzureServiceBusIntegration creates an Azure Service-Bus application-integration.",
+        "operationId": "CreateAzureServiceBusIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "integration.application_id",
+            "description": "Application ID.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiCreateAzureServiceBusIntegrationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      },
+      "put": {
+        "summary": "UpdateAzureServiceBusIntegration updates the Azure Service-Bus application-integration.",
+        "operationId": "UpdateAzureServiceBusIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "integration.application_id",
+            "description": "Application ID.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiUpdateAzureServiceBusIntegrationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      }
+    },
+    "/api/applications/{integration.application_id}/integrations/gcp-pub-sub": {
+      "post": {
+        "summary": "CreateGCPPubSubIntegration creates a GCP PubSub application-integration.",
+        "operationId": "CreateGCPPubSubIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "integration.application_id",
+            "description": "Application ID.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiCreateGCPPubSubIntegrationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      },
+      "put": {
+        "summary": "UpdateGCPPubSubIntegration updates the GCP PubSub application-integration.",
+        "operationId": "UpdateGCPPubSubIntegration",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "properties": {}
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "integration.application_id",
+            "description": "Application ID.",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/apiUpdateGCPPubSubIntegrationRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ApplicationService"
+        ]
+      }
+    },
     "/api/applications/{integration.application_id}/integrations/http": {
       "post": {
         "summary": "CreateHTTPIntegration creates a HTTP application-integration.",
@@ -644,74 +952,6 @@
             "required": true,
             "schema": {
               "$ref": "#/definitions/apiUpdateInfluxDBIntegrationRequest"
-            }
-          }
-        ],
-        "tags": [
-          "ApplicationService"
-        ]
-      }
-    },
-    "/api/applications/{integration.application_id}/integrations/konker": {
-      "post": {
-        "summary": "CreateKonkerIntegration creates A Konker application-integration.",
-        "operationId": "CreateKonkerIntegration",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "integration.application_id",
-            "description": "The id of the application.",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/apiCreateKonkerIntegrationRequest"
-            }
-          }
-        ],
-        "tags": [
-          "ApplicationService"
-        ]
-      },
-      "put": {
-        "summary": "UpdateKonkerIntegration updates the Konker application-integration.",
-        "operationId": "UpdateKonkerIntegration",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "properties": {}
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "integration.application_id",
-            "description": "The id of the application.",
-            "in": "path",
-            "required": true,
-            "type": "string",
-            "format": "int64"
-          },
-          {
-            "name": "body",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/apiUpdateKonkerIntegrationRequest"
             }
           }
         ],
@@ -926,6 +1166,36 @@
     }
   },
   "definitions": {
+    "apiAWSSNSIntegration": {
+      "type": "object",
+      "properties": {
+        "applicationID": {
+          "type": "string",
+          "format": "int64",
+          "description": "Application ID."
+        },
+        "marshaler": {
+          "$ref": "#/definitions/apiMarshaler",
+          "description": "Marshaler.\nThis defines the marshaler that is used to encode the event payload."
+        },
+        "region": {
+          "type": "string",
+          "description": "AWS region."
+        },
+        "accessKeyID": {
+          "type": "string",
+          "description": "AWS Access Key ID."
+        },
+        "secretAccessKey": {
+          "type": "string",
+          "description": "AWS Secret Access Key."
+        },
+        "topicARN": {
+          "type": "string",
+          "description": "Topic ARN."
+        }
+      }
+    },
     "apiApplication": {
       "type": "object",
       "properties": {
@@ -996,6 +1266,37 @@
         }
       }
     },
+    "apiAzureServiceBusIntegration": {
+      "type": "object",
+      "properties": {
+        "applicationID": {
+          "type": "string",
+          "format": "int64",
+          "description": "Application ID."
+        },
+        "marshaler": {
+          "$ref": "#/definitions/apiMarshaler",
+          "description": "Marshaler.\nThis defines the marshaler that is used to encode the event payload."
+        },
+        "connectionString": {
+          "type": "string",
+          "description": "Connection string."
+        },
+        "publishName": {
+          "type": "string",
+          "description": "Publish name.\nThis is the name of the topic or queue."
+        }
+      }
+    },
+    "apiCreateAWSSNSIntegrationRequest": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "$ref": "#/definitions/apiAWSSNSIntegration",
+          "description": "Integration object to create."
+        }
+      }
+    },
     "apiCreateApplicationRequest": {
       "type": "object",
       "properties": {
@@ -1015,6 +1316,24 @@
         }
       }
     },
+    "apiCreateAzureServiceBusIntegrationRequest": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "$ref": "#/definitions/apiAzureServiceBusIntegration",
+          "description": "Integration object to create."
+        }
+      }
+    },
+    "apiCreateGCPPubSubIntegrationRequest": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "$ref": "#/definitions/apiGCPPubSubIntegration",
+          "description": "Integration object to create."
+        }
+      }
+    },
     "apiCreateHTTPIntegrationRequest": {
       "type": "object",
       "properties": {
@@ -1029,15 +1348,6 @@
       "properties": {
         "integration": {
           "$ref": "#/definitions/apiInfluxDBIntegration",
-          "description": "Integration object to create."
-        }
-      }
-    },
-    "apiCreateKonkerIntegrationRequest": {
-      "type": "object",
-      "properties": {
-        "integration": {
-          "$ref": "#/definitions/apiKonkerIntegration",
           "description": "Integration object to create."
         }
       }
@@ -1069,12 +1379,65 @@
         }
       }
     },
+    "apiGCPPubSubIntegration": {
+      "type": "object",
+      "properties": {
+        "applicationID": {
+          "type": "string",
+          "format": "int64",
+          "description": "Application ID."
+        },
+        "marshaler": {
+          "$ref": "#/definitions/apiMarshaler",
+          "description": "Marshaler.\nThis defines the marshaler that is used to encode the event payload."
+        },
+        "credentialsFile": {
+          "type": "string",
+          "title": "Credentials file.\nThis IAM service-account credentials file (JSON) must have the following Pub/Sub roles:\n* Pub/Sub Publisher"
+        },
+        "projectID": {
+          "type": "string",
+          "description": "Project ID."
+        },
+        "topicName": {
+          "type": "string",
+          "description": "Topic name.\nThis is the name of the Pub/Sub topic."
+        }
+      }
+    },
+    "apiGetAWSSNSIntegrationResponse": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "$ref": "#/definitions/apiAWSSNSIntegration",
+          "description": "Integration object."
+        }
+      }
+    },
     "apiGetApplicationResponse": {
       "type": "object",
       "properties": {
         "application": {
           "$ref": "#/definitions/apiApplication",
           "description": "Application object."
+        }
+      }
+    },
+    "apiGetAzureServiceBusIntegrationResponse": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "$ref": "#/definitions/apiAzureServiceBusIntegration",
+          "description": "Integration object."
+        }
+      }
+    },
+    "apiGetGCPPubSubIntegrationResponse": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "$ref": "#/definitions/apiGCPPubSubIntegration",
+          "description": "Integration object."
         }
       }
     },
@@ -1092,15 +1455,6 @@
       "properties": {
         "integration": {
           "$ref": "#/definitions/apiInfluxDBIntegration",
-          "description": "Integration object."
-        }
-      }
-    },
-    "apiGetKonkerIntegrationResponse": {
-      "type": "object",
-      "properties": {
-        "integration": {
-          "$ref": "#/definitions/apiKonkerIntegration",
           "description": "Integration object."
         }
       }
@@ -1149,31 +1503,43 @@
         },
         "uplinkDataURL": {
           "type": "string",
-          "description": "The URL to call for uplink data."
+          "description": "The URL to call for uplink data.\nDeprecated: use event_endpoint_url."
         },
         "joinNotificationURL": {
           "type": "string",
-          "description": "The URL to call for join notifications."
+          "description": "The URL to call for join notifications.\nDeprecated: use event_endpoint_url."
         },
         "ackNotificationURL": {
           "type": "string",
-          "description": "The URL to call for ACK notifications (for confirmed downlink data)."
+          "description": "The URL to call for ACK notifications (for confirmed downlink data).\nDeprecated: use event_endpoint_url."
         },
         "errorNotificationURL": {
           "type": "string",
-          "description": "The URL to call for error notifications."
+          "description": "The URL to call for error notifications.\nDeprecated: use event_endpoint_url."
         },
         "statusNotificationURL": {
           "type": "string",
-          "description": "The URL to call for device-status notifications."
+          "description": "The URL to call for device-status notifications.\nDeprecated: use event_endpoint_url."
         },
         "locationNotificationURL": {
           "type": "string",
-          "description": "The URL to call for location notifications."
+          "description": "The URL to call for location notifications.\nDeprecated: use event_endpoint_url."
         },
         "txAckNotificationURL": {
           "type": "string",
-          "description": "The URL to call for tx ack notifications (downlink acknowledged by gateway for transmission)."
+          "description": "The URL to call for tx ack notifications (downlink acknowledged by gateway for transmission).\nDeprecated: use event_endpoint_url."
+        },
+        "integrationNotificationURL": {
+          "type": "string",
+          "description": "The URL to call for integration notifications.\nDeprecated: use event_endpoint_url."
+        },
+        "marshaler": {
+          "$ref": "#/definitions/apiMarshaler",
+          "description": "Marshaler.\nThis defines the marshaler that is used to encode the event payload."
+        },
+        "eventEndpointURL": {
+          "type": "string",
+          "description": "Event endpoint URL.\nThe HTTP integration will POST all events to this enpoint. The request\nwill contain a query parameters \"eventType\" containing the type of the\nevent."
         }
       }
     },
@@ -1244,7 +1610,9 @@
         "THINGSBOARD",
         "MYDEVICES",
         "LORACLOUD",
-        "KONKER"
+        "GCP_PUBSUB",
+        "AWS_SNS",
+        "AZURE_SERVICE_BUS"
       ],
       "default": "HTTP"
     },
@@ -1254,64 +1622,6 @@
         "kind": {
           "$ref": "#/definitions/apiIntegrationKind",
           "description": "Integration kind."
-        }
-      }
-    },
-    "apiKonkerIntegration": {
-      "type": "object",
-      "properties": {
-        "applicationID": {
-          "type": "string",
-          "format": "int64",
-          "description": "The id of the application."
-        },
-        "headers": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/apiKonkerIntegrationHeader"
-          },
-          "description": "The headers to use when making HTTP callbacks."
-        },
-        "uplinkDataURL": {
-          "type": "string",
-          "description": "The URL to call for uplink data."
-        },
-        "joinNotificationURL": {
-          "type": "string",
-          "description": "The URL to call for join notifications."
-        },
-        "ackNotificationURL": {
-          "type": "string",
-          "description": "The URL to call for ACK notifications (for confirmed downlink data)."
-        },
-        "errorNotificationURL": {
-          "type": "string",
-          "description": "The URL to call for error notifications."
-        },
-        "statusNotificationURL": {
-          "type": "string",
-          "description": "The URL to call for device-status notifications."
-        },
-        "locationNotificationURL": {
-          "type": "string",
-          "description": "The URL to call for location notifications."
-        },
-        "txAckNotificationURL": {
-          "type": "string",
-          "description": "The URL to call for tx ack notifications (downlink acknowledged by gateway for transmission)."
-        }
-      }
-    },
-    "apiKonkerIntegrationHeader": {
-      "type": "object",
-      "properties": {
-        "key": {
-          "type": "string",
-          "title": "Key"
-        },
-        "value": {
-          "type": "string",
-          "title": "Value"
         }
       }
     },
@@ -1408,8 +1718,31 @@
         "geolocationWifiPayloadField": {
           "type": "string",
           "title": "Wifi payload field.\nThis holds the name of the field in the decoded payload object which\ncontains an array of objects with the following fields:\n* macAddress - e.g. 01:23:45:67:89:ab\n* signalStrength - e.g. -51 (optional)"
+        },
+        "das": {
+          "type": "boolean",
+          "format": "boolean",
+          "description": "Device Application Services enabled."
+        },
+        "dasToken": {
+          "type": "string",
+          "description": "Device Application Services token.\nThis token can be obtained from the LoRa Cloud console."
+        },
+        "dasModemPort": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Device Application Services modem port (FPort).\nChirpStack Application Server will only forward the FRMPayload to DAS\nwhen the uplink FPort is equal to this value."
         }
       }
+    },
+    "apiMarshaler": {
+      "type": "string",
+      "enum": [
+        "JSON",
+        "PROTOBUF",
+        "JSON_V3"
+      ],
+      "default": "JSON"
     },
     "apiMyDevicesIntegration": {
       "type": "object",
@@ -1439,12 +1772,39 @@
         }
       }
     },
+    "apiUpdateAWSSNSIntegrationRequest": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "$ref": "#/definitions/apiAWSSNSIntegration",
+          "description": "Integration object to update."
+        }
+      }
+    },
     "apiUpdateApplicationRequest": {
       "type": "object",
       "properties": {
         "application": {
           "$ref": "#/definitions/apiApplication",
           "description": "Application object to update."
+        }
+      }
+    },
+    "apiUpdateAzureServiceBusIntegrationRequest": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "$ref": "#/definitions/apiAzureServiceBusIntegration",
+          "description": "Integration object to update."
+        }
+      }
+    },
+    "apiUpdateGCPPubSubIntegrationRequest": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "$ref": "#/definitions/apiGCPPubSubIntegration",
+          "description": "Integration object to update."
         }
       }
     },
@@ -1463,15 +1823,6 @@
         "integration": {
           "$ref": "#/definitions/apiInfluxDBIntegration",
           "description": "Integration object."
-        }
-      }
-    },
-    "apiUpdateKonkerIntegrationRequest": {
-      "type": "object",
-      "properties": {
-        "integration": {
-          "$ref": "#/definitions/apiKonkerIntegration",
-          "description": "Integration object to update."
         }
       }
     },

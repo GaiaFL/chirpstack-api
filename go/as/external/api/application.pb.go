@@ -29,12 +29,15 @@ const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 type IntegrationKind int32
 
 const (
-	IntegrationKind_HTTP        IntegrationKind = 0
-	IntegrationKind_INFLUXDB    IntegrationKind = 1
-	IntegrationKind_THINGSBOARD IntegrationKind = 2
-	IntegrationKind_MYDEVICES   IntegrationKind = 3
-	IntegrationKind_LORACLOUD   IntegrationKind = 4
-	IntegrationKind_KONKER      IntegrationKind = 5
+	IntegrationKind_HTTP              IntegrationKind = 0
+	IntegrationKind_INFLUXDB          IntegrationKind = 1
+	IntegrationKind_THINGSBOARD       IntegrationKind = 2
+	IntegrationKind_MYDEVICES         IntegrationKind = 3
+	IntegrationKind_LORACLOUD         IntegrationKind = 4
+	IntegrationKind_GCP_PUBSUB        IntegrationKind = 5
+	IntegrationKind_AWS_SNS           IntegrationKind = 6
+	IntegrationKind_AZURE_SERVICE_BUS IntegrationKind = 7
+	IntegrationKind_KONKER            IntegrationKind = 8
 )
 
 var IntegrationKind_name = map[int32]string{
@@ -43,16 +46,22 @@ var IntegrationKind_name = map[int32]string{
 	2: "THINGSBOARD",
 	3: "MYDEVICES",
 	4: "LORACLOUD",
-	5: "KONKER",
+	5: "GCP_PUBSUB",
+	6: "AWS_SNS",
+	7: "AZURE_SERVICE_BUS",
+	8: "KONKER",
 }
 
 var IntegrationKind_value = map[string]int32{
-	"HTTP":        0,
-	"INFLUXDB":    1,
-	"THINGSBOARD": 2,
-	"MYDEVICES":   3,
-	"LORACLOUD":   4,
-	"KONKER":      5,
+	"HTTP":              0,
+	"INFLUXDB":          1,
+	"THINGSBOARD":       2,
+	"MYDEVICES":         3,
+	"LORACLOUD":         4,
+	"GCP_PUBSUB":        5,
+	"AWS_SNS":           6,
+	"AZURE_SERVICE_BUS": 7,
+	"KONKER":            8,
 }
 
 func (x IntegrationKind) String() string {
@@ -61,6 +70,34 @@ func (x IntegrationKind) String() string {
 
 func (IntegrationKind) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_0774996cc1ba5bfc, []int{0}
+}
+
+type Marshaler int32
+
+const (
+	Marshaler_JSON     Marshaler = 0
+	Marshaler_PROTOBUF Marshaler = 1
+	Marshaler_JSON_V3  Marshaler = 2
+)
+
+var Marshaler_name = map[int32]string{
+	0: "JSON",
+	1: "PROTOBUF",
+	2: "JSON_V3",
+}
+
+var Marshaler_value = map[string]int32{
+	"JSON":     0,
+	"PROTOBUF": 1,
+	"JSON_V3":  2,
+}
+
+func (x Marshaler) String() string {
+	return proto.EnumName(Marshaler_name, int32(x))
+}
+
+func (Marshaler) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{1}
 }
 
 type InfluxDBPrecision int32
@@ -97,7 +134,7 @@ func (x InfluxDBPrecision) String() string {
 }
 
 func (InfluxDBPrecision) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_0774996cc1ba5bfc, []int{1}
+	return fileDescriptor_0774996cc1ba5bfc, []int{2}
 }
 
 type Application struct {
@@ -710,19 +747,37 @@ type HTTPIntegration struct {
 	// The headers to use when making HTTP callbacks.
 	Headers []*HTTPIntegrationHeader `protobuf:"bytes,2,rep,name=headers,proto3" json:"headers,omitempty"`
 	// The URL to call for uplink data.
+	// Deprecated: use event_endpoint_url.
 	UplinkDataUrl string `protobuf:"bytes,3,opt,name=uplink_data_url,json=uplinkDataURL,proto3" json:"uplink_data_url,omitempty"`
 	// The URL to call for join notifications.
+	// Deprecated: use event_endpoint_url.
 	JoinNotificationUrl string `protobuf:"bytes,4,opt,name=join_notification_url,json=joinNotificationURL,proto3" json:"join_notification_url,omitempty"`
 	// The URL to call for ACK notifications (for confirmed downlink data).
+	// Deprecated: use event_endpoint_url.
 	AckNotificationUrl string `protobuf:"bytes,5,opt,name=ack_notification_url,json=ackNotificationURL,proto3" json:"ack_notification_url,omitempty"`
 	// The URL to call for error notifications.
+	// Deprecated: use event_endpoint_url.
 	ErrorNotificationUrl string `protobuf:"bytes,6,opt,name=error_notification_url,json=errorNotificationURL,proto3" json:"error_notification_url,omitempty"`
 	// The URL to call for device-status notifications.
+	// Deprecated: use event_endpoint_url.
 	StatusNotificationUrl string `protobuf:"bytes,7,opt,name=status_notification_url,json=statusNotificationURL,proto3" json:"status_notification_url,omitempty"`
 	// The URL to call for location notifications.
+	// Deprecated: use event_endpoint_url.
 	LocationNotificationUrl string `protobuf:"bytes,8,opt,name=location_notification_url,json=locationNotificationURL,proto3" json:"location_notification_url,omitempty"`
 	// The URL to call for tx ack notifications (downlink acknowledged by gateway for transmission).
-	TxAckNotificationUrl string   `protobuf:"bytes,9,opt,name=tx_ack_notification_url,json=txAckNotificationURL,proto3" json:"tx_ack_notification_url,omitempty"`
+	// Deprecated: use event_endpoint_url.
+	TxAckNotificationUrl string `protobuf:"bytes,9,opt,name=tx_ack_notification_url,json=txAckNotificationURL,proto3" json:"tx_ack_notification_url,omitempty"`
+	// The URL to call for integration notifications.
+	// Deprecated: use event_endpoint_url.
+	IntegrationNotificationUrl string `protobuf:"bytes,10,opt,name=integration_notification_url,json=integrationNotificationURL,proto3" json:"integration_notification_url,omitempty"`
+	// Marshaler.
+	// This defines the marshaler that is used to encode the event payload.
+	Marshaler Marshaler `protobuf:"varint,11,opt,name=marshaler,proto3,enum=api.Marshaler" json:"marshaler,omitempty"`
+	// Event endpoint URL.
+	// The HTTP integration will POST all events to this enpoint. The request
+	// will contain a query parameters "eventType" containing the type of the
+	// event.
+	EventEndpointUrl     string   `protobuf:"bytes,12,opt,name=event_endpoint_url,json=eventEndpointURL,proto3" json:"event_endpoint_url,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -812,6 +867,27 @@ func (m *HTTPIntegration) GetLocationNotificationUrl() string {
 func (m *HTTPIntegration) GetTxAckNotificationUrl() string {
 	if m != nil {
 		return m.TxAckNotificationUrl
+	}
+	return ""
+}
+
+func (m *HTTPIntegration) GetIntegrationNotificationUrl() string {
+	if m != nil {
+		return m.IntegrationNotificationUrl
+	}
+	return ""
+}
+
+func (m *HTTPIntegration) GetMarshaler() Marshaler {
+	if m != nil {
+		return m.Marshaler
+	}
+	return Marshaler_JSON
+}
+
+func (m *HTTPIntegration) GetEventEndpointUrl() string {
+	if m != nil {
+		return m.EventEndpointUrl
 	}
 	return ""
 }
@@ -1068,22 +1144,40 @@ func (m *KonkerIntegrationHeader) GetValue() string {
 type KonkerIntegration struct {
 	// The id of the application.
 	ApplicationId int64 `protobuf:"varint,1,opt,name=application_id,json=applicationID,proto3" json:"application_id,omitempty"`
-	// The headers to use when making HTTP callbacks.
+	// The headers to use when making Konker callbacks.
 	Headers []*KonkerIntegrationHeader `protobuf:"bytes,2,rep,name=headers,proto3" json:"headers,omitempty"`
 	// The URL to call for uplink data.
+	// Deprecated: use event_endpoint_url.
 	UplinkDataUrl string `protobuf:"bytes,3,opt,name=uplink_data_url,json=uplinkDataURL,proto3" json:"uplink_data_url,omitempty"`
 	// The URL to call for join notifications.
+	// Deprecated: use event_endpoint_url.
 	JoinNotificationUrl string `protobuf:"bytes,4,opt,name=join_notification_url,json=joinNotificationURL,proto3" json:"join_notification_url,omitempty"`
 	// The URL to call for ACK notifications (for confirmed downlink data).
+	// Deprecated: use event_endpoint_url.
 	AckNotificationUrl string `protobuf:"bytes,5,opt,name=ack_notification_url,json=ackNotificationURL,proto3" json:"ack_notification_url,omitempty"`
 	// The URL to call for error notifications.
+	// Deprecated: use event_endpoint_url.
 	ErrorNotificationUrl string `protobuf:"bytes,6,opt,name=error_notification_url,json=errorNotificationURL,proto3" json:"error_notification_url,omitempty"`
 	// The URL to call for device-status notifications.
+	// Deprecated: use event_endpoint_url.
 	StatusNotificationUrl string `protobuf:"bytes,7,opt,name=status_notification_url,json=statusNotificationURL,proto3" json:"status_notification_url,omitempty"`
 	// The URL to call for location notifications.
+	// Deprecated: use event_endpoint_url.
 	LocationNotificationUrl string `protobuf:"bytes,8,opt,name=location_notification_url,json=locationNotificationURL,proto3" json:"location_notification_url,omitempty"`
 	// The URL to call for tx ack notifications (downlink acknowledged by gateway for transmission).
-	TxAckNotificationUrl string   `protobuf:"bytes,9,opt,name=tx_ack_notification_url,json=txAckNotificationURL,proto3" json:"tx_ack_notification_url,omitempty"`
+	// Deprecated: use event_endpoint_url.
+	TxAckNotificationUrl string `protobuf:"bytes,9,opt,name=tx_ack_notification_url,json=txAckNotificationURL,proto3" json:"tx_ack_notification_url,omitempty"`
+	// The URL to call for integration notifications.
+	// Deprecated: use event_endpoint_url.
+	IntegrationNotificationUrl string `protobuf:"bytes,10,opt,name=integration_notification_url,json=integrationNotificationURL,proto3" json:"integration_notification_url,omitempty"`
+	// Marshaler.
+	// This defines the marshaler that is used to encode the event payload.
+	Marshaler Marshaler `protobuf:"varint,11,opt,name=marshaler,proto3,enum=api.Marshaler" json:"marshaler,omitempty"`
+	// Event endpoint URL.
+	// The Konker integration will POST all events to this enpoint. The request
+	// will contain a query parameters "eventType" containing the type of the
+	// event.
+	EventEndpointUrl     string   `protobuf:"bytes,12,opt,name=event_endpoint_url,json=eventEndpointURL,proto3" json:"event_endpoint_url,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
@@ -1173,6 +1267,27 @@ func (m *KonkerIntegration) GetLocationNotificationUrl() string {
 func (m *KonkerIntegration) GetTxAckNotificationUrl() string {
 	if m != nil {
 		return m.TxAckNotificationUrl
+	}
+	return ""
+}
+
+func (m *KonkerIntegration) GetIntegrationNotificationUrl() string {
+	if m != nil {
+		return m.IntegrationNotificationUrl
+	}
+	return ""
+}
+
+func (m *KonkerIntegration) GetMarshaler() Marshaler {
+	if m != nil {
+		return m.Marshaler
+	}
+	return Marshaler_JSON
+}
+
+func (m *KonkerIntegration) GetEventEndpointUrl() string {
+	if m != nil {
+		return m.EventEndpointUrl
 	}
 	return ""
 }
@@ -2335,10 +2450,19 @@ type LoRaCloudIntegration struct {
 	// contains an array of objects with the following fields:
 	// * macAddress - e.g. 01:23:45:67:89:ab
 	// * signalStrength - e.g. -51 (optional)
-	GeolocationWifiPayloadField string   `protobuf:"bytes,12,opt,name=geolocation_wifi_payload_field,json=geolocationWifiPayloadField,proto3" json:"geolocation_wifi_payload_field,omitempty"`
-	XXX_NoUnkeyedLiteral        struct{} `json:"-"`
-	XXX_unrecognized            []byte   `json:"-"`
-	XXX_sizecache               int32    `json:"-"`
+	GeolocationWifiPayloadField string `protobuf:"bytes,12,opt,name=geolocation_wifi_payload_field,json=geolocationWifiPayloadField,proto3" json:"geolocation_wifi_payload_field,omitempty"`
+	// Device Application Services enabled.
+	Das bool `protobuf:"varint,13,opt,name=das,proto3" json:"das,omitempty"`
+	// Device Application Services token.
+	// This token can be obtained from the LoRa Cloud console.
+	DasToken string `protobuf:"bytes,14,opt,name=das_token,json=dasToken,proto3" json:"das_token,omitempty"`
+	// Device Application Services modem port (FPort).
+	// ChirpStack Application Server will only forward the FRMPayload to DAS
+	// when the uplink FPort is equal to this value.
+	DasModemPort         uint32   `protobuf:"varint,15,opt,name=das_modem_port,json=dasModemPort,proto3" json:"das_modem_port,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
 func (m *LoRaCloudIntegration) Reset()         { *m = LoRaCloudIntegration{} }
@@ -2448,6 +2572,27 @@ func (m *LoRaCloudIntegration) GetGeolocationWifiPayloadField() string {
 		return m.GeolocationWifiPayloadField
 	}
 	return ""
+}
+
+func (m *LoRaCloudIntegration) GetDas() bool {
+	if m != nil {
+		return m.Das
+	}
+	return false
+}
+
+func (m *LoRaCloudIntegration) GetDasToken() string {
+	if m != nil {
+		return m.DasToken
+	}
+	return ""
+}
+
+func (m *LoRaCloudIntegration) GetDasModemPort() uint32 {
+	if m != nil {
+		return m.DasModemPort
+	}
+	return 0
 }
 
 type CreateLoRaCloudIntegrationRequest struct {
@@ -2650,8 +2795,850 @@ func (m *DeleteLoRaCloudIntegrationRequest) GetApplicationId() int64 {
 	return 0
 }
 
+type GCPPubSubIntegration struct {
+	// Application ID.
+	ApplicationId int64 `protobuf:"varint,1,opt,name=application_id,json=applicationID,proto3" json:"application_id,omitempty"`
+	// Marshaler.
+	// This defines the marshaler that is used to encode the event payload.
+	Marshaler Marshaler `protobuf:"varint,2,opt,name=marshaler,proto3,enum=api.Marshaler" json:"marshaler,omitempty"`
+	// Credentials file.
+	// This IAM service-account credentials file (JSON) must have the following Pub/Sub roles:
+	// * Pub/Sub Publisher
+	CredentialsFile string `protobuf:"bytes,3,opt,name=credentials_file,json=credentialsFile,proto3" json:"credentials_file,omitempty"`
+	// Project ID.
+	ProjectId string `protobuf:"bytes,4,opt,name=project_id,json=projectID,proto3" json:"project_id,omitempty"`
+	// Topic name.
+	// This is the name of the Pub/Sub topic.
+	TopicName            string   `protobuf:"bytes,5,opt,name=topic_name,json=topicName,proto3" json:"topic_name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GCPPubSubIntegration) Reset()         { *m = GCPPubSubIntegration{} }
+func (m *GCPPubSubIntegration) String() string { return proto.CompactTextString(m) }
+func (*GCPPubSubIntegration) ProtoMessage()    {}
+func (*GCPPubSubIntegration) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{51}
+}
+
+func (m *GCPPubSubIntegration) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GCPPubSubIntegration.Unmarshal(m, b)
+}
+func (m *GCPPubSubIntegration) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GCPPubSubIntegration.Marshal(b, m, deterministic)
+}
+func (m *GCPPubSubIntegration) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GCPPubSubIntegration.Merge(m, src)
+}
+func (m *GCPPubSubIntegration) XXX_Size() int {
+	return xxx_messageInfo_GCPPubSubIntegration.Size(m)
+}
+func (m *GCPPubSubIntegration) XXX_DiscardUnknown() {
+	xxx_messageInfo_GCPPubSubIntegration.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GCPPubSubIntegration proto.InternalMessageInfo
+
+func (m *GCPPubSubIntegration) GetApplicationId() int64 {
+	if m != nil {
+		return m.ApplicationId
+	}
+	return 0
+}
+
+func (m *GCPPubSubIntegration) GetMarshaler() Marshaler {
+	if m != nil {
+		return m.Marshaler
+	}
+	return Marshaler_JSON
+}
+
+func (m *GCPPubSubIntegration) GetCredentialsFile() string {
+	if m != nil {
+		return m.CredentialsFile
+	}
+	return ""
+}
+
+func (m *GCPPubSubIntegration) GetProjectId() string {
+	if m != nil {
+		return m.ProjectId
+	}
+	return ""
+}
+
+func (m *GCPPubSubIntegration) GetTopicName() string {
+	if m != nil {
+		return m.TopicName
+	}
+	return ""
+}
+
+type CreateGCPPubSubIntegrationRequest struct {
+	// Integration object to create.
+	Integration          *GCPPubSubIntegration `protobuf:"bytes,1,opt,name=integration,proto3" json:"integration,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
+}
+
+func (m *CreateGCPPubSubIntegrationRequest) Reset()         { *m = CreateGCPPubSubIntegrationRequest{} }
+func (m *CreateGCPPubSubIntegrationRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateGCPPubSubIntegrationRequest) ProtoMessage()    {}
+func (*CreateGCPPubSubIntegrationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{52}
+}
+
+func (m *CreateGCPPubSubIntegrationRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateGCPPubSubIntegrationRequest.Unmarshal(m, b)
+}
+func (m *CreateGCPPubSubIntegrationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateGCPPubSubIntegrationRequest.Marshal(b, m, deterministic)
+}
+func (m *CreateGCPPubSubIntegrationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateGCPPubSubIntegrationRequest.Merge(m, src)
+}
+func (m *CreateGCPPubSubIntegrationRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateGCPPubSubIntegrationRequest.Size(m)
+}
+func (m *CreateGCPPubSubIntegrationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateGCPPubSubIntegrationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateGCPPubSubIntegrationRequest proto.InternalMessageInfo
+
+func (m *CreateGCPPubSubIntegrationRequest) GetIntegration() *GCPPubSubIntegration {
+	if m != nil {
+		return m.Integration
+	}
+	return nil
+}
+
+type GetGCPPubSubIntegrationRequest struct {
+	// Application ID.
+	ApplicationId        int64    `protobuf:"varint,1,opt,name=application_id,json=applicationID,proto3" json:"application_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetGCPPubSubIntegrationRequest) Reset()         { *m = GetGCPPubSubIntegrationRequest{} }
+func (m *GetGCPPubSubIntegrationRequest) String() string { return proto.CompactTextString(m) }
+func (*GetGCPPubSubIntegrationRequest) ProtoMessage()    {}
+func (*GetGCPPubSubIntegrationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{53}
+}
+
+func (m *GetGCPPubSubIntegrationRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetGCPPubSubIntegrationRequest.Unmarshal(m, b)
+}
+func (m *GetGCPPubSubIntegrationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetGCPPubSubIntegrationRequest.Marshal(b, m, deterministic)
+}
+func (m *GetGCPPubSubIntegrationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetGCPPubSubIntegrationRequest.Merge(m, src)
+}
+func (m *GetGCPPubSubIntegrationRequest) XXX_Size() int {
+	return xxx_messageInfo_GetGCPPubSubIntegrationRequest.Size(m)
+}
+func (m *GetGCPPubSubIntegrationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetGCPPubSubIntegrationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetGCPPubSubIntegrationRequest proto.InternalMessageInfo
+
+func (m *GetGCPPubSubIntegrationRequest) GetApplicationId() int64 {
+	if m != nil {
+		return m.ApplicationId
+	}
+	return 0
+}
+
+type GetGCPPubSubIntegrationResponse struct {
+	// Integration object.
+	Integration          *GCPPubSubIntegration `protobuf:"bytes,1,opt,name=integration,proto3" json:"integration,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
+}
+
+func (m *GetGCPPubSubIntegrationResponse) Reset()         { *m = GetGCPPubSubIntegrationResponse{} }
+func (m *GetGCPPubSubIntegrationResponse) String() string { return proto.CompactTextString(m) }
+func (*GetGCPPubSubIntegrationResponse) ProtoMessage()    {}
+func (*GetGCPPubSubIntegrationResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{54}
+}
+
+func (m *GetGCPPubSubIntegrationResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetGCPPubSubIntegrationResponse.Unmarshal(m, b)
+}
+func (m *GetGCPPubSubIntegrationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetGCPPubSubIntegrationResponse.Marshal(b, m, deterministic)
+}
+func (m *GetGCPPubSubIntegrationResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetGCPPubSubIntegrationResponse.Merge(m, src)
+}
+func (m *GetGCPPubSubIntegrationResponse) XXX_Size() int {
+	return xxx_messageInfo_GetGCPPubSubIntegrationResponse.Size(m)
+}
+func (m *GetGCPPubSubIntegrationResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetGCPPubSubIntegrationResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetGCPPubSubIntegrationResponse proto.InternalMessageInfo
+
+func (m *GetGCPPubSubIntegrationResponse) GetIntegration() *GCPPubSubIntegration {
+	if m != nil {
+		return m.Integration
+	}
+	return nil
+}
+
+type UpdateGCPPubSubIntegrationRequest struct {
+	// Integration object to update.
+	Integration          *GCPPubSubIntegration `protobuf:"bytes,1,opt,name=integration,proto3" json:"integration,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
+}
+
+func (m *UpdateGCPPubSubIntegrationRequest) Reset()         { *m = UpdateGCPPubSubIntegrationRequest{} }
+func (m *UpdateGCPPubSubIntegrationRequest) String() string { return proto.CompactTextString(m) }
+func (*UpdateGCPPubSubIntegrationRequest) ProtoMessage()    {}
+func (*UpdateGCPPubSubIntegrationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{55}
+}
+
+func (m *UpdateGCPPubSubIntegrationRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateGCPPubSubIntegrationRequest.Unmarshal(m, b)
+}
+func (m *UpdateGCPPubSubIntegrationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateGCPPubSubIntegrationRequest.Marshal(b, m, deterministic)
+}
+func (m *UpdateGCPPubSubIntegrationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateGCPPubSubIntegrationRequest.Merge(m, src)
+}
+func (m *UpdateGCPPubSubIntegrationRequest) XXX_Size() int {
+	return xxx_messageInfo_UpdateGCPPubSubIntegrationRequest.Size(m)
+}
+func (m *UpdateGCPPubSubIntegrationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateGCPPubSubIntegrationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateGCPPubSubIntegrationRequest proto.InternalMessageInfo
+
+func (m *UpdateGCPPubSubIntegrationRequest) GetIntegration() *GCPPubSubIntegration {
+	if m != nil {
+		return m.Integration
+	}
+	return nil
+}
+
+type DeleteGCPPubSubIntegrationRequest struct {
+	// The id of the application.
+	ApplicationId        int64    `protobuf:"varint,1,opt,name=application_id,json=applicationID,proto3" json:"application_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteGCPPubSubIntegrationRequest) Reset()         { *m = DeleteGCPPubSubIntegrationRequest{} }
+func (m *DeleteGCPPubSubIntegrationRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteGCPPubSubIntegrationRequest) ProtoMessage()    {}
+func (*DeleteGCPPubSubIntegrationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{56}
+}
+
+func (m *DeleteGCPPubSubIntegrationRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteGCPPubSubIntegrationRequest.Unmarshal(m, b)
+}
+func (m *DeleteGCPPubSubIntegrationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteGCPPubSubIntegrationRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteGCPPubSubIntegrationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteGCPPubSubIntegrationRequest.Merge(m, src)
+}
+func (m *DeleteGCPPubSubIntegrationRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteGCPPubSubIntegrationRequest.Size(m)
+}
+func (m *DeleteGCPPubSubIntegrationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteGCPPubSubIntegrationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteGCPPubSubIntegrationRequest proto.InternalMessageInfo
+
+func (m *DeleteGCPPubSubIntegrationRequest) GetApplicationId() int64 {
+	if m != nil {
+		return m.ApplicationId
+	}
+	return 0
+}
+
+type AWSSNSIntegration struct {
+	// Application ID.
+	ApplicationId int64 `protobuf:"varint,1,opt,name=application_id,json=applicationID,proto3" json:"application_id,omitempty"`
+	// Marshaler.
+	// This defines the marshaler that is used to encode the event payload.
+	Marshaler Marshaler `protobuf:"varint,2,opt,name=marshaler,proto3,enum=api.Marshaler" json:"marshaler,omitempty"`
+	// AWS region.
+	Region string `protobuf:"bytes,3,opt,name=region,proto3" json:"region,omitempty"`
+	// AWS Access Key ID.
+	AccessKeyId string `protobuf:"bytes,4,opt,name=access_key_id,json=accessKeyID,proto3" json:"access_key_id,omitempty"`
+	// AWS Secret Access Key.
+	SecretAccessKey string `protobuf:"bytes,5,opt,name=secret_access_key,json=secretAccessKey,proto3" json:"secret_access_key,omitempty"`
+	// Topic ARN.
+	TopicArn             string   `protobuf:"bytes,6,opt,name=topic_arn,json=topicARN,proto3" json:"topic_arn,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *AWSSNSIntegration) Reset()         { *m = AWSSNSIntegration{} }
+func (m *AWSSNSIntegration) String() string { return proto.CompactTextString(m) }
+func (*AWSSNSIntegration) ProtoMessage()    {}
+func (*AWSSNSIntegration) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{57}
+}
+
+func (m *AWSSNSIntegration) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AWSSNSIntegration.Unmarshal(m, b)
+}
+func (m *AWSSNSIntegration) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AWSSNSIntegration.Marshal(b, m, deterministic)
+}
+func (m *AWSSNSIntegration) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AWSSNSIntegration.Merge(m, src)
+}
+func (m *AWSSNSIntegration) XXX_Size() int {
+	return xxx_messageInfo_AWSSNSIntegration.Size(m)
+}
+func (m *AWSSNSIntegration) XXX_DiscardUnknown() {
+	xxx_messageInfo_AWSSNSIntegration.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AWSSNSIntegration proto.InternalMessageInfo
+
+func (m *AWSSNSIntegration) GetApplicationId() int64 {
+	if m != nil {
+		return m.ApplicationId
+	}
+	return 0
+}
+
+func (m *AWSSNSIntegration) GetMarshaler() Marshaler {
+	if m != nil {
+		return m.Marshaler
+	}
+	return Marshaler_JSON
+}
+
+func (m *AWSSNSIntegration) GetRegion() string {
+	if m != nil {
+		return m.Region
+	}
+	return ""
+}
+
+func (m *AWSSNSIntegration) GetAccessKeyId() string {
+	if m != nil {
+		return m.AccessKeyId
+	}
+	return ""
+}
+
+func (m *AWSSNSIntegration) GetSecretAccessKey() string {
+	if m != nil {
+		return m.SecretAccessKey
+	}
+	return ""
+}
+
+func (m *AWSSNSIntegration) GetTopicArn() string {
+	if m != nil {
+		return m.TopicArn
+	}
+	return ""
+}
+
+type CreateAWSSNSIntegrationRequest struct {
+	// Integration object to create.
+	Integration          *AWSSNSIntegration `protobuf:"bytes,1,opt,name=integration,proto3" json:"integration,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
+}
+
+func (m *CreateAWSSNSIntegrationRequest) Reset()         { *m = CreateAWSSNSIntegrationRequest{} }
+func (m *CreateAWSSNSIntegrationRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateAWSSNSIntegrationRequest) ProtoMessage()    {}
+func (*CreateAWSSNSIntegrationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{58}
+}
+
+func (m *CreateAWSSNSIntegrationRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateAWSSNSIntegrationRequest.Unmarshal(m, b)
+}
+func (m *CreateAWSSNSIntegrationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateAWSSNSIntegrationRequest.Marshal(b, m, deterministic)
+}
+func (m *CreateAWSSNSIntegrationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateAWSSNSIntegrationRequest.Merge(m, src)
+}
+func (m *CreateAWSSNSIntegrationRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateAWSSNSIntegrationRequest.Size(m)
+}
+func (m *CreateAWSSNSIntegrationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateAWSSNSIntegrationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateAWSSNSIntegrationRequest proto.InternalMessageInfo
+
+func (m *CreateAWSSNSIntegrationRequest) GetIntegration() *AWSSNSIntegration {
+	if m != nil {
+		return m.Integration
+	}
+	return nil
+}
+
+type GetAWSSNSIntegrationRequest struct {
+	// Application ID.
+	ApplicationId        int64    `protobuf:"varint,1,opt,name=application_id,json=applicationID,proto3" json:"application_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetAWSSNSIntegrationRequest) Reset()         { *m = GetAWSSNSIntegrationRequest{} }
+func (m *GetAWSSNSIntegrationRequest) String() string { return proto.CompactTextString(m) }
+func (*GetAWSSNSIntegrationRequest) ProtoMessage()    {}
+func (*GetAWSSNSIntegrationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{59}
+}
+
+func (m *GetAWSSNSIntegrationRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetAWSSNSIntegrationRequest.Unmarshal(m, b)
+}
+func (m *GetAWSSNSIntegrationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetAWSSNSIntegrationRequest.Marshal(b, m, deterministic)
+}
+func (m *GetAWSSNSIntegrationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAWSSNSIntegrationRequest.Merge(m, src)
+}
+func (m *GetAWSSNSIntegrationRequest) XXX_Size() int {
+	return xxx_messageInfo_GetAWSSNSIntegrationRequest.Size(m)
+}
+func (m *GetAWSSNSIntegrationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAWSSNSIntegrationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAWSSNSIntegrationRequest proto.InternalMessageInfo
+
+func (m *GetAWSSNSIntegrationRequest) GetApplicationId() int64 {
+	if m != nil {
+		return m.ApplicationId
+	}
+	return 0
+}
+
+type GetAWSSNSIntegrationResponse struct {
+	// Integration object.
+	Integration          *AWSSNSIntegration `protobuf:"bytes,1,opt,name=integration,proto3" json:"integration,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
+}
+
+func (m *GetAWSSNSIntegrationResponse) Reset()         { *m = GetAWSSNSIntegrationResponse{} }
+func (m *GetAWSSNSIntegrationResponse) String() string { return proto.CompactTextString(m) }
+func (*GetAWSSNSIntegrationResponse) ProtoMessage()    {}
+func (*GetAWSSNSIntegrationResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{60}
+}
+
+func (m *GetAWSSNSIntegrationResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetAWSSNSIntegrationResponse.Unmarshal(m, b)
+}
+func (m *GetAWSSNSIntegrationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetAWSSNSIntegrationResponse.Marshal(b, m, deterministic)
+}
+func (m *GetAWSSNSIntegrationResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAWSSNSIntegrationResponse.Merge(m, src)
+}
+func (m *GetAWSSNSIntegrationResponse) XXX_Size() int {
+	return xxx_messageInfo_GetAWSSNSIntegrationResponse.Size(m)
+}
+func (m *GetAWSSNSIntegrationResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAWSSNSIntegrationResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAWSSNSIntegrationResponse proto.InternalMessageInfo
+
+func (m *GetAWSSNSIntegrationResponse) GetIntegration() *AWSSNSIntegration {
+	if m != nil {
+		return m.Integration
+	}
+	return nil
+}
+
+type UpdateAWSSNSIntegrationRequest struct {
+	// Integration object to update.
+	Integration          *AWSSNSIntegration `protobuf:"bytes,1,opt,name=integration,proto3" json:"integration,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
+}
+
+func (m *UpdateAWSSNSIntegrationRequest) Reset()         { *m = UpdateAWSSNSIntegrationRequest{} }
+func (m *UpdateAWSSNSIntegrationRequest) String() string { return proto.CompactTextString(m) }
+func (*UpdateAWSSNSIntegrationRequest) ProtoMessage()    {}
+func (*UpdateAWSSNSIntegrationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{61}
+}
+
+func (m *UpdateAWSSNSIntegrationRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateAWSSNSIntegrationRequest.Unmarshal(m, b)
+}
+func (m *UpdateAWSSNSIntegrationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateAWSSNSIntegrationRequest.Marshal(b, m, deterministic)
+}
+func (m *UpdateAWSSNSIntegrationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateAWSSNSIntegrationRequest.Merge(m, src)
+}
+func (m *UpdateAWSSNSIntegrationRequest) XXX_Size() int {
+	return xxx_messageInfo_UpdateAWSSNSIntegrationRequest.Size(m)
+}
+func (m *UpdateAWSSNSIntegrationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateAWSSNSIntegrationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateAWSSNSIntegrationRequest proto.InternalMessageInfo
+
+func (m *UpdateAWSSNSIntegrationRequest) GetIntegration() *AWSSNSIntegration {
+	if m != nil {
+		return m.Integration
+	}
+	return nil
+}
+
+type DeleteAWSSNSIntegrationRequest struct {
+	// The id of the application.
+	ApplicationId        int64    `protobuf:"varint,1,opt,name=application_id,json=applicationID,proto3" json:"application_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteAWSSNSIntegrationRequest) Reset()         { *m = DeleteAWSSNSIntegrationRequest{} }
+func (m *DeleteAWSSNSIntegrationRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteAWSSNSIntegrationRequest) ProtoMessage()    {}
+func (*DeleteAWSSNSIntegrationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{62}
+}
+
+func (m *DeleteAWSSNSIntegrationRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteAWSSNSIntegrationRequest.Unmarshal(m, b)
+}
+func (m *DeleteAWSSNSIntegrationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteAWSSNSIntegrationRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteAWSSNSIntegrationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteAWSSNSIntegrationRequest.Merge(m, src)
+}
+func (m *DeleteAWSSNSIntegrationRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteAWSSNSIntegrationRequest.Size(m)
+}
+func (m *DeleteAWSSNSIntegrationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteAWSSNSIntegrationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteAWSSNSIntegrationRequest proto.InternalMessageInfo
+
+func (m *DeleteAWSSNSIntegrationRequest) GetApplicationId() int64 {
+	if m != nil {
+		return m.ApplicationId
+	}
+	return 0
+}
+
+type AzureServiceBusIntegration struct {
+	// Application ID.
+	ApplicationId int64 `protobuf:"varint,1,opt,name=application_id,json=applicationID,proto3" json:"application_id,omitempty"`
+	// Marshaler.
+	// This defines the marshaler that is used to encode the event payload.
+	Marshaler Marshaler `protobuf:"varint,2,opt,name=marshaler,proto3,enum=api.Marshaler" json:"marshaler,omitempty"`
+	// Connection string.
+	ConnectionString string `protobuf:"bytes,3,opt,name=connection_string,json=connectionString,proto3" json:"connection_string,omitempty"`
+	// Publish name.
+	// This is the name of the topic or queue.
+	PublishName          string   `protobuf:"bytes,4,opt,name=publish_name,json=publishName,proto3" json:"publish_name,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *AzureServiceBusIntegration) Reset()         { *m = AzureServiceBusIntegration{} }
+func (m *AzureServiceBusIntegration) String() string { return proto.CompactTextString(m) }
+func (*AzureServiceBusIntegration) ProtoMessage()    {}
+func (*AzureServiceBusIntegration) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{63}
+}
+
+func (m *AzureServiceBusIntegration) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_AzureServiceBusIntegration.Unmarshal(m, b)
+}
+func (m *AzureServiceBusIntegration) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_AzureServiceBusIntegration.Marshal(b, m, deterministic)
+}
+func (m *AzureServiceBusIntegration) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_AzureServiceBusIntegration.Merge(m, src)
+}
+func (m *AzureServiceBusIntegration) XXX_Size() int {
+	return xxx_messageInfo_AzureServiceBusIntegration.Size(m)
+}
+func (m *AzureServiceBusIntegration) XXX_DiscardUnknown() {
+	xxx_messageInfo_AzureServiceBusIntegration.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_AzureServiceBusIntegration proto.InternalMessageInfo
+
+func (m *AzureServiceBusIntegration) GetApplicationId() int64 {
+	if m != nil {
+		return m.ApplicationId
+	}
+	return 0
+}
+
+func (m *AzureServiceBusIntegration) GetMarshaler() Marshaler {
+	if m != nil {
+		return m.Marshaler
+	}
+	return Marshaler_JSON
+}
+
+func (m *AzureServiceBusIntegration) GetConnectionString() string {
+	if m != nil {
+		return m.ConnectionString
+	}
+	return ""
+}
+
+func (m *AzureServiceBusIntegration) GetPublishName() string {
+	if m != nil {
+		return m.PublishName
+	}
+	return ""
+}
+
+type CreateAzureServiceBusIntegrationRequest struct {
+	// Integration object to create.
+	Integration          *AzureServiceBusIntegration `protobuf:"bytes,1,opt,name=integration,proto3" json:"integration,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
+	XXX_unrecognized     []byte                      `json:"-"`
+	XXX_sizecache        int32                       `json:"-"`
+}
+
+func (m *CreateAzureServiceBusIntegrationRequest) Reset() {
+	*m = CreateAzureServiceBusIntegrationRequest{}
+}
+func (m *CreateAzureServiceBusIntegrationRequest) String() string { return proto.CompactTextString(m) }
+func (*CreateAzureServiceBusIntegrationRequest) ProtoMessage()    {}
+func (*CreateAzureServiceBusIntegrationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{64}
+}
+
+func (m *CreateAzureServiceBusIntegrationRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CreateAzureServiceBusIntegrationRequest.Unmarshal(m, b)
+}
+func (m *CreateAzureServiceBusIntegrationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CreateAzureServiceBusIntegrationRequest.Marshal(b, m, deterministic)
+}
+func (m *CreateAzureServiceBusIntegrationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CreateAzureServiceBusIntegrationRequest.Merge(m, src)
+}
+func (m *CreateAzureServiceBusIntegrationRequest) XXX_Size() int {
+	return xxx_messageInfo_CreateAzureServiceBusIntegrationRequest.Size(m)
+}
+func (m *CreateAzureServiceBusIntegrationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_CreateAzureServiceBusIntegrationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CreateAzureServiceBusIntegrationRequest proto.InternalMessageInfo
+
+func (m *CreateAzureServiceBusIntegrationRequest) GetIntegration() *AzureServiceBusIntegration {
+	if m != nil {
+		return m.Integration
+	}
+	return nil
+}
+
+type GetAzureServiceBusIntegrationRequest struct {
+	// Application ID.
+	ApplicationId        int64    `protobuf:"varint,1,opt,name=application_id,json=applicationID,proto3" json:"application_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetAzureServiceBusIntegrationRequest) Reset()         { *m = GetAzureServiceBusIntegrationRequest{} }
+func (m *GetAzureServiceBusIntegrationRequest) String() string { return proto.CompactTextString(m) }
+func (*GetAzureServiceBusIntegrationRequest) ProtoMessage()    {}
+func (*GetAzureServiceBusIntegrationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{65}
+}
+
+func (m *GetAzureServiceBusIntegrationRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetAzureServiceBusIntegrationRequest.Unmarshal(m, b)
+}
+func (m *GetAzureServiceBusIntegrationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetAzureServiceBusIntegrationRequest.Marshal(b, m, deterministic)
+}
+func (m *GetAzureServiceBusIntegrationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAzureServiceBusIntegrationRequest.Merge(m, src)
+}
+func (m *GetAzureServiceBusIntegrationRequest) XXX_Size() int {
+	return xxx_messageInfo_GetAzureServiceBusIntegrationRequest.Size(m)
+}
+func (m *GetAzureServiceBusIntegrationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAzureServiceBusIntegrationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAzureServiceBusIntegrationRequest proto.InternalMessageInfo
+
+func (m *GetAzureServiceBusIntegrationRequest) GetApplicationId() int64 {
+	if m != nil {
+		return m.ApplicationId
+	}
+	return 0
+}
+
+type GetAzureServiceBusIntegrationResponse struct {
+	// Integration object.
+	Integration          *AzureServiceBusIntegration `protobuf:"bytes,1,opt,name=integration,proto3" json:"integration,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
+	XXX_unrecognized     []byte                      `json:"-"`
+	XXX_sizecache        int32                       `json:"-"`
+}
+
+func (m *GetAzureServiceBusIntegrationResponse) Reset()         { *m = GetAzureServiceBusIntegrationResponse{} }
+func (m *GetAzureServiceBusIntegrationResponse) String() string { return proto.CompactTextString(m) }
+func (*GetAzureServiceBusIntegrationResponse) ProtoMessage()    {}
+func (*GetAzureServiceBusIntegrationResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{66}
+}
+
+func (m *GetAzureServiceBusIntegrationResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetAzureServiceBusIntegrationResponse.Unmarshal(m, b)
+}
+func (m *GetAzureServiceBusIntegrationResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetAzureServiceBusIntegrationResponse.Marshal(b, m, deterministic)
+}
+func (m *GetAzureServiceBusIntegrationResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetAzureServiceBusIntegrationResponse.Merge(m, src)
+}
+func (m *GetAzureServiceBusIntegrationResponse) XXX_Size() int {
+	return xxx_messageInfo_GetAzureServiceBusIntegrationResponse.Size(m)
+}
+func (m *GetAzureServiceBusIntegrationResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetAzureServiceBusIntegrationResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetAzureServiceBusIntegrationResponse proto.InternalMessageInfo
+
+func (m *GetAzureServiceBusIntegrationResponse) GetIntegration() *AzureServiceBusIntegration {
+	if m != nil {
+		return m.Integration
+	}
+	return nil
+}
+
+type UpdateAzureServiceBusIntegrationRequest struct {
+	// Integration object to update.
+	Integration          *AzureServiceBusIntegration `protobuf:"bytes,1,opt,name=integration,proto3" json:"integration,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
+	XXX_unrecognized     []byte                      `json:"-"`
+	XXX_sizecache        int32                       `json:"-"`
+}
+
+func (m *UpdateAzureServiceBusIntegrationRequest) Reset() {
+	*m = UpdateAzureServiceBusIntegrationRequest{}
+}
+func (m *UpdateAzureServiceBusIntegrationRequest) String() string { return proto.CompactTextString(m) }
+func (*UpdateAzureServiceBusIntegrationRequest) ProtoMessage()    {}
+func (*UpdateAzureServiceBusIntegrationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{67}
+}
+
+func (m *UpdateAzureServiceBusIntegrationRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateAzureServiceBusIntegrationRequest.Unmarshal(m, b)
+}
+func (m *UpdateAzureServiceBusIntegrationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateAzureServiceBusIntegrationRequest.Marshal(b, m, deterministic)
+}
+func (m *UpdateAzureServiceBusIntegrationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateAzureServiceBusIntegrationRequest.Merge(m, src)
+}
+func (m *UpdateAzureServiceBusIntegrationRequest) XXX_Size() int {
+	return xxx_messageInfo_UpdateAzureServiceBusIntegrationRequest.Size(m)
+}
+func (m *UpdateAzureServiceBusIntegrationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateAzureServiceBusIntegrationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateAzureServiceBusIntegrationRequest proto.InternalMessageInfo
+
+func (m *UpdateAzureServiceBusIntegrationRequest) GetIntegration() *AzureServiceBusIntegration {
+	if m != nil {
+		return m.Integration
+	}
+	return nil
+}
+
+type DeleteAzureServiceBusIntegrationRequest struct {
+	// The id of the application.
+	ApplicationId        int64    `protobuf:"varint,1,opt,name=application_id,json=applicationID,proto3" json:"application_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteAzureServiceBusIntegrationRequest) Reset() {
+	*m = DeleteAzureServiceBusIntegrationRequest{}
+}
+func (m *DeleteAzureServiceBusIntegrationRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteAzureServiceBusIntegrationRequest) ProtoMessage()    {}
+func (*DeleteAzureServiceBusIntegrationRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0774996cc1ba5bfc, []int{68}
+}
+
+func (m *DeleteAzureServiceBusIntegrationRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteAzureServiceBusIntegrationRequest.Unmarshal(m, b)
+}
+func (m *DeleteAzureServiceBusIntegrationRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteAzureServiceBusIntegrationRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteAzureServiceBusIntegrationRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteAzureServiceBusIntegrationRequest.Merge(m, src)
+}
+func (m *DeleteAzureServiceBusIntegrationRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteAzureServiceBusIntegrationRequest.Size(m)
+}
+func (m *DeleteAzureServiceBusIntegrationRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteAzureServiceBusIntegrationRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteAzureServiceBusIntegrationRequest proto.InternalMessageInfo
+
+func (m *DeleteAzureServiceBusIntegrationRequest) GetApplicationId() int64 {
+	if m != nil {
+		return m.ApplicationId
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterEnum("api.IntegrationKind", IntegrationKind_name, IntegrationKind_value)
+	proto.RegisterEnum("api.Marshaler", Marshaler_name, Marshaler_value)
 	proto.RegisterEnum("api.InfluxDBPrecision", InfluxDBPrecision_name, InfluxDBPrecision_value)
 	proto.RegisterType((*Application)(nil), "api.Application")
 	proto.RegisterType((*ApplicationListItem)(nil), "api.ApplicationListItem")
@@ -2704,6 +3691,24 @@ func init() {
 	proto.RegisterType((*GetLoRaCloudIntegrationResponse)(nil), "api.GetLoRaCloudIntegrationResponse")
 	proto.RegisterType((*UpdateLoRaCloudIntegrationRequest)(nil), "api.UpdateLoRaCloudIntegrationRequest")
 	proto.RegisterType((*DeleteLoRaCloudIntegrationRequest)(nil), "api.DeleteLoRaCloudIntegrationRequest")
+	proto.RegisterType((*GCPPubSubIntegration)(nil), "api.GCPPubSubIntegration")
+	proto.RegisterType((*CreateGCPPubSubIntegrationRequest)(nil), "api.CreateGCPPubSubIntegrationRequest")
+	proto.RegisterType((*GetGCPPubSubIntegrationRequest)(nil), "api.GetGCPPubSubIntegrationRequest")
+	proto.RegisterType((*GetGCPPubSubIntegrationResponse)(nil), "api.GetGCPPubSubIntegrationResponse")
+	proto.RegisterType((*UpdateGCPPubSubIntegrationRequest)(nil), "api.UpdateGCPPubSubIntegrationRequest")
+	proto.RegisterType((*DeleteGCPPubSubIntegrationRequest)(nil), "api.DeleteGCPPubSubIntegrationRequest")
+	proto.RegisterType((*AWSSNSIntegration)(nil), "api.AWSSNSIntegration")
+	proto.RegisterType((*CreateAWSSNSIntegrationRequest)(nil), "api.CreateAWSSNSIntegrationRequest")
+	proto.RegisterType((*GetAWSSNSIntegrationRequest)(nil), "api.GetAWSSNSIntegrationRequest")
+	proto.RegisterType((*GetAWSSNSIntegrationResponse)(nil), "api.GetAWSSNSIntegrationResponse")
+	proto.RegisterType((*UpdateAWSSNSIntegrationRequest)(nil), "api.UpdateAWSSNSIntegrationRequest")
+	proto.RegisterType((*DeleteAWSSNSIntegrationRequest)(nil), "api.DeleteAWSSNSIntegrationRequest")
+	proto.RegisterType((*AzureServiceBusIntegration)(nil), "api.AzureServiceBusIntegration")
+	proto.RegisterType((*CreateAzureServiceBusIntegrationRequest)(nil), "api.CreateAzureServiceBusIntegrationRequest")
+	proto.RegisterType((*GetAzureServiceBusIntegrationRequest)(nil), "api.GetAzureServiceBusIntegrationRequest")
+	proto.RegisterType((*GetAzureServiceBusIntegrationResponse)(nil), "api.GetAzureServiceBusIntegrationResponse")
+	proto.RegisterType((*UpdateAzureServiceBusIntegrationRequest)(nil), "api.UpdateAzureServiceBusIntegrationRequest")
+	proto.RegisterType((*DeleteAzureServiceBusIntegrationRequest)(nil), "api.DeleteAzureServiceBusIntegrationRequest")
 }
 
 func init() {
@@ -2711,154 +3716,204 @@ func init() {
 }
 
 var fileDescriptor_0774996cc1ba5bfc = []byte{
-	// 2345 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x5a, 0x4d, 0x6f, 0x1b, 0xc7,
-	0x19, 0xce, 0x8a, 0x92, 0x2c, 0xbd, 0xb2, 0x2c, 0x7a, 0x2c, 0x51, 0x14, 0xa5, 0xc8, 0xd2, 0xda,
-	0xb5, 0x5d, 0xa5, 0x11, 0x5d, 0xc7, 0x75, 0x1c, 0xbb, 0x8e, 0x23, 0x89, 0x32, 0xcd, 0xe8, 0x13,
-	0x4b, 0xca, 0x49, 0x8c, 0xc0, 0xcc, 0x8a, 0x3b, 0x94, 0xa6, 0x22, 0x77, 0xb7, 0xbb, 0x4b, 0x47,
-	0x72, 0xe1, 0x4b, 0x0f, 0x2d, 0xd0, 0x53, 0x81, 0x00, 0xbd, 0xb4, 0x40, 0x0e, 0x45, 0xd1, 0x43,
-	0x81, 0xf6, 0xd2, 0x5b, 0xff, 0x42, 0x6f, 0x3d, 0xf7, 0x50, 0x20, 0xff, 0xa1, 0xd7, 0x62, 0x3e,
-	0x96, 0x5a, 0x2e, 0x67, 0x97, 0x12, 0x49, 0xa1, 0x3d, 0xf4, 0x64, 0xcd, 0xbe, 0x1f, 0xf3, 0xcc,
-	0x33, 0xcf, 0x0c, 0x67, 0xde, 0x31, 0x2c, 0xea, 0x6e, 0x16, 0x1f, 0x7b, 0xd8, 0x31, 0xf5, 0x5a,
-	0x56, 0xb7, 0x49, 0x56, 0xb7, 0xed, 0x1a, 0xa9, 0xe8, 0x1e, 0xb1, 0xcc, 0x65, 0xdb, 0xb1, 0x3c,
-	0x0b, 0x25, 0x74, 0x9b, 0x64, 0xe6, 0x0e, 0x2c, 0xeb, 0xa0, 0x86, 0xb9, 0x8b, 0x69, 0x5a, 0x1e,
-	0xf3, 0x70, 0xb9, 0x4b, 0x66, 0x56, 0x58, 0x59, 0x6b, 0xbf, 0x51, 0xcd, 0xe2, 0xba, 0xed, 0x9d,
-	0x70, 0xa3, 0xfa, 0xb7, 0x01, 0x18, 0x5b, 0x39, 0xcd, 0x8a, 0xae, 0xc0, 0x00, 0x31, 0xd2, 0xca,
-	0x82, 0x72, 0x27, 0xa1, 0x0d, 0x10, 0x03, 0x21, 0x18, 0x34, 0xf5, 0x3a, 0x4e, 0x0f, 0x2c, 0x28,
-	0x77, 0x46, 0x35, 0xf6, 0x37, 0x5a, 0x80, 0x31, 0x03, 0xbb, 0x15, 0x87, 0xd8, 0x34, 0x24, 0x9d,
-	0x60, 0xa6, 0xe0, 0x27, 0x74, 0x1b, 0x26, 0x2c, 0xe7, 0x40, 0x37, 0xc9, 0x1b, 0x96, 0xb5, 0x4c,
-	0x8c, 0xf4, 0x20, 0x4b, 0x79, 0x25, 0xf8, 0xb9, 0x90, 0x43, 0x3f, 0x00, 0xe4, 0x62, 0xe7, 0x35,
-	0xa9, 0xe0, 0xb2, 0xed, 0x58, 0x55, 0x52, 0xc3, 0xd4, 0x77, 0x88, 0x65, 0x4c, 0x0a, 0xcb, 0x2e,
-	0x37, 0x14, 0x72, 0xe8, 0x06, 0x8c, 0xdb, 0xfa, 0x49, 0xcd, 0xd2, 0x8d, 0x72, 0xc5, 0x32, 0x70,
-	0x25, 0x3d, 0xcc, 0x1c, 0x2f, 0x8b, 0x8f, 0x6b, 0xf4, 0x1b, 0xba, 0x0f, 0x29, 0xdf, 0x09, 0x9b,
-	0xd4, 0xcd, 0x29, 0x73, 0x60, 0xe9, 0x4b, 0xcc, 0x7b, 0x52, 0x58, 0xd7, 0xb9, 0xb1, 0xc8, 0x6c,
-	0xc1, 0x28, 0x03, 0xb7, 0x44, 0x8d, 0xb4, 0x44, 0xe5, 0x70, 0x20, 0x4a, 0xfd, 0x4e, 0x81, 0x6b,
-	0x01, 0xf6, 0x36, 0x89, 0xeb, 0x15, 0x3c, 0x5c, 0xff, 0xdf, 0x66, 0xf1, 0x2e, 0x4c, 0x86, 0xbd,
-	0x19, 0x38, 0x4e, 0x26, 0x6a, 0xf5, 0xdf, 0xd6, 0xeb, 0x58, 0xdd, 0x86, 0xf4, 0x9a, 0x83, 0x75,
-	0x0f, 0x07, 0xc6, 0xaa, 0xe1, 0x9f, 0x36, 0xb0, 0xeb, 0xa1, 0x7b, 0x30, 0x16, 0x50, 0x25, 0x1b,
-	0xf3, 0xd8, 0xbd, 0xe4, 0xb2, 0x6e, 0x93, 0xe5, 0xa0, 0x77, 0xd0, 0x49, 0x7d, 0x0f, 0x66, 0x24,
-	0xf9, 0x5c, 0xdb, 0x32, 0x5d, 0x1c, 0xe6, 0x4e, 0xbd, 0x0d, 0x53, 0x79, 0xec, 0x49, 0x7a, 0x0e,
-	0x3b, 0x6e, 0x42, 0x2a, 0xec, 0x28, 0x52, 0x76, 0x83, 0x71, 0x1b, 0xd2, 0x7b, 0xb6, 0xd1, 0xbf,
-	0x31, 0x2f, 0x41, 0x3a, 0x87, 0x6b, 0x58, 0x9a, 0x2f, 0x3c, 0x92, 0x5f, 0x2a, 0x90, 0xa2, 0x5a,
-	0x92, 0xb8, 0x4e, 0xc2, 0x50, 0x8d, 0xd4, 0x89, 0x27, 0xbc, 0x79, 0x03, 0xa5, 0x60, 0xd8, 0xaa,
-	0x56, 0x5d, 0xec, 0x31, 0x85, 0x25, 0x34, 0xd1, 0x92, 0x29, 0x28, 0x21, 0x55, 0x50, 0x0a, 0x86,
-	0x5d, 0xac, 0x3b, 0x95, 0x43, 0xa6, 0xb0, 0x51, 0x4d, 0xb4, 0xd4, 0x1a, 0x4c, 0xb7, 0x01, 0x11,
-	0xa4, 0x5e, 0x87, 0x31, 0xcf, 0xf2, 0xf4, 0x5a, 0xb9, 0x62, 0x35, 0x4c, 0x1f, 0x0f, 0xb0, 0x4f,
-	0x6b, 0xf4, 0x0b, 0xba, 0x0b, 0xc3, 0x0e, 0x76, 0x1b, 0x35, 0x0a, 0x2a, 0x71, 0x67, 0xec, 0x5e,
-	0x3a, 0x4c, 0x90, 0xbf, 0x5c, 0x34, 0xe1, 0xa7, 0x3e, 0x85, 0xa9, 0xe7, 0xa5, 0xd2, 0x6e, 0xc1,
-	0xf4, 0xf0, 0x81, 0xc3, 0x5c, 0x9e, 0x63, 0xdd, 0xc0, 0x0e, 0x4a, 0x42, 0xe2, 0x08, 0x9f, 0xb0,
-	0x3e, 0x46, 0x35, 0xfa, 0x27, 0xe5, 0xe1, 0xb5, 0x5e, 0x6b, 0xf8, 0x4b, 0x8a, 0x37, 0xd4, 0x7f,
-	0x26, 0x60, 0x22, 0x94, 0x01, 0x7d, 0x0f, 0xae, 0x04, 0xe6, 0xa1, 0xdc, 0x24, 0x7a, 0x3c, 0xf0,
-	0xb5, 0x90, 0x43, 0xf7, 0xe1, 0xd2, 0x21, 0xeb, 0xcc, 0x15, 0x70, 0x33, 0x0c, 0xae, 0x14, 0x8f,
-	0xe6, 0xbb, 0xa2, 0x5b, 0x30, 0xd1, 0xb0, 0x6b, 0xc4, 0x3c, 0x2a, 0x1b, 0xba, 0xa7, 0x97, 0x1b,
-	0x4e, 0x4d, 0x2c, 0xe4, 0x71, 0xfe, 0x39, 0xa7, 0x7b, 0xfa, 0x9e, 0xb6, 0x89, 0xee, 0xc1, 0xd4,
-	0x4f, 0x2c, 0x62, 0x96, 0x4d, 0xcb, 0x23, 0x55, 0x1f, 0x0a, 0xf5, 0xe6, 0x74, 0x5f, 0xa3, 0xc6,
-	0xed, 0x80, 0x8d, 0xc6, 0xdc, 0x85, 0x49, 0xbd, 0x72, 0xd4, 0x1e, 0xc2, 0xd7, 0x35, 0xd2, 0x2b,
-	0x47, 0xe1, 0x88, 0xfb, 0x90, 0xc2, 0x8e, 0x63, 0x39, 0xed, 0x31, 0x7c, 0x6d, 0x4f, 0x32, 0x6b,
-	0x38, 0xea, 0x01, 0x4c, 0xbb, 0x9e, 0xee, 0x35, 0xdc, 0xf6, 0x30, 0xbe, 0x63, 0x4e, 0x71, 0x73,
-	0x38, 0xee, 0x11, 0xcc, 0xd4, 0x2c, 0xe1, 0xdc, 0x16, 0xc9, 0x77, 0xcd, 0x69, 0xdf, 0x21, 0x1c,
-	0xfb, 0x23, 0x98, 0xf6, 0x8e, 0xcb, 0xd2, 0xe1, 0x8d, 0x72, 0xa8, 0xde, 0xf1, 0x4a, 0xdb, 0x00,
-	0xd5, 0x17, 0x30, 0xc7, 0x37, 0x8e, 0xd0, 0xb4, 0xf8, 0xab, 0xe3, 0x01, 0x8c, 0x91, 0xd3, 0xaf,
-	0x62, 0x61, 0x4e, 0xca, 0x26, 0x52, 0x0b, 0x3a, 0xaa, 0xab, 0x30, 0x93, 0xc7, 0x5e, 0x44, 0xd2,
-	0xb3, 0x09, 0x48, 0x2d, 0x41, 0x46, 0x96, 0x43, 0xac, 0x96, 0x6e, 0x91, 0xbd, 0x80, 0x39, 0xbe,
-	0x0d, 0xf5, 0x79, 0xc4, 0xeb, 0x30, 0xc7, 0xb7, 0xa3, 0xde, 0x06, 0xbd, 0x02, 0xd3, 0x1b, 0x96,
-	0x79, 0x84, 0x9d, 0xee, 0xd7, 0xec, 0xbf, 0x12, 0x70, 0xb5, 0x2d, 0xc7, 0x59, 0x57, 0xed, 0x83,
-	0xf0, 0xaa, 0x9d, 0x63, 0x43, 0x8f, 0xc0, 0xf4, 0xff, 0x75, 0xfb, 0x5f, 0x5a, 0xb7, 0x2f, 0x61,
-	0x9e, 0xaf, 0xdb, 0xb6, 0x89, 0xf1, 0xf5, 0xf6, 0x50, 0xa6, 0xe3, 0x94, 0x7c, 0x32, 0x5b, 0x95,
-	0x9c, 0x83, 0xd9, 0x3c, 0xf6, 0x22, 0x13, 0x9f, 0x51, 0xc8, 0x9f, 0xc3, 0x9c, 0x3c, 0x8b, 0x58,
-	0xbf, 0xdd, 0xe3, 0x7b, 0x09, 0xf3, 0x7c, 0x05, 0x5f, 0xc0, 0xd8, 0xf3, 0x30, 0xcf, 0x57, 0x71,
-	0xaf, 0xc3, 0x7f, 0xca, 0x0f, 0x1c, 0xbd, 0x24, 0xb8, 0x16, 0x08, 0x6e, 0x1e, 0x84, 0xef, 0xc0,
-	0xe0, 0x11, 0x31, 0x79, 0xcc, 0x15, 0xb1, 0x2f, 0x05, 0xfc, 0x36, 0x88, 0x69, 0x68, 0xcc, 0xc3,
-	0x3f, 0x69, 0xc8, 0xb8, 0xef, 0xf2, 0xa4, 0x21, 0xc1, 0xd3, 0x3c, 0x69, 0xfc, 0x6a, 0x80, 0xe2,
-	0xad, 0xd6, 0x1a, 0xc7, 0xb9, 0xd5, 0x2e, 0xb6, 0x9d, 0x0c, 0x8c, 0x60, 0xd3, 0xb0, 0x2d, 0x62,
-	0x7a, 0x62, 0x33, 0x6b, 0xb6, 0xe9, 0x61, 0xce, 0xd8, 0x17, 0xbb, 0xc9, 0x80, 0xb1, 0x4f, 0x7d,
-	0x1b, 0x2e, 0xbd, 0xc2, 0xd5, 0xb1, 0xd8, 0x35, 0x9a, 0x6d, 0x6a, 0xb3, 0x75, 0xd7, 0xfd, 0xda,
-	0x72, 0xfc, 0xe3, 0x7a, 0xb3, 0x4d, 0xb7, 0x1e, 0x07, 0x7b, 0xd8, 0x64, 0x40, 0x6c, 0xab, 0x46,
-	0x2a, 0x27, 0xc1, 0x73, 0xfa, 0xb5, 0xa6, 0x71, 0x97, 0xd9, 0xe8, 0x41, 0x1d, 0xdd, 0x87, 0x51,
-	0xdb, 0xc1, 0x15, 0xe2, 0x52, 0x1d, 0x5d, 0x62, 0x9c, 0xa7, 0x04, 0x17, 0x7c, 0xac, 0xbb, 0xbe,
-	0x55, 0x3b, 0x75, 0x54, 0x5f, 0xc1, 0x02, 0x5f, 0x9d, 0x12, 0x46, 0x7c, 0x19, 0x3c, 0x92, 0x69,
-	0x34, 0xdd, 0x92, 0x3b, 0x52, 0xa5, 0xcf, 0xe0, 0xdd, 0x3c, 0xf6, 0x62, 0x92, 0x9f, 0x51, 0x63,
-	0x5f, 0xc2, 0x7c, 0x54, 0x1e, 0xa1, 0x94, 0x5e, 0x50, 0xbe, 0x82, 0x05, 0xbe, 0x4e, 0x2f, 0x88,
-	0x85, 0x02, 0x2c, 0xf0, 0xb5, 0xda, 0x3b, 0x11, 0x9f, 0x41, 0xaa, 0x74, 0x48, 0xcc, 0x03, 0x77,
-	0xd5, 0xd2, 0x1d, 0xa3, 0x0b, 0xfd, 0xb2, 0xe3, 0xbe, 0xf3, 0x1a, 0x3b, 0x42, 0xbd, 0xa2, 0xa5,
-	0x1a, 0x70, 0x83, 0x2b, 0x41, 0x9e, 0xde, 0x87, 0xf9, 0x44, 0x46, 0xc3, 0x2c, 0xa3, 0x21, 0x22,
-	0x30, 0xcc, 0x44, 0x1e, 0x7b, 0xf1, 0x5d, 0x9c, 0x91, 0x89, 0x7d, 0x58, 0x8c, 0x49, 0x25, 0x54,
-	0xd1, 0x23, 0x5c, 0x03, 0x6e, 0x70, 0x61, 0x5c, 0x28, 0x29, 0x9b, 0x70, 0x83, 0xcb, 0xa3, 0x2f,
-	0xbc, 0x7c, 0x01, 0x93, 0x5b, 0x27, 0x39, 0x4c, 0x2f, 0xf2, 0x6e, 0x7f, 0xf7, 0x37, 0xf5, 0x2b,
-	0x58, 0xe4, 0x1a, 0x91, 0x75, 0xe0, 0xc3, 0x7c, 0x2c, 0x23, 0x63, 0x86, 0x91, 0x21, 0x0d, 0x0b,
-	0xff, 0xaa, 0xe5, 0xb1, 0x17, 0x97, 0xfe, 0x8c, 0x2c, 0xbc, 0x82, 0xeb, 0x91, 0x89, 0x84, 0x36,
-	0x7a, 0x02, 0xfa, 0x15, 0x2c, 0x72, 0x65, 0x5c, 0x18, 0x15, 0x9f, 0xc2, 0x22, 0x57, 0x45, 0x1f,
-	0xd8, 0xf8, 0xf7, 0x20, 0x4c, 0x6e, 0x5a, 0x9a, 0xbe, 0x56, 0xb3, 0x1a, 0xdd, 0x6c, 0x1a, 0x0b,
-	0x30, 0x76, 0x80, 0x2d, 0xff, 0x64, 0xc8, 0x74, 0x31, 0xa2, 0x05, 0x3f, 0xa1, 0xf7, 0xe0, 0x6a,
-	0xa0, 0x59, 0xf6, 0xac, 0x23, 0xec, 0x17, 0xb6, 0x92, 0x01, 0x43, 0x89, 0x7e, 0xa7, 0x87, 0xde,
-	0xa0, 0xf3, 0x7e, 0xa3, 0x5a, 0xc5, 0x4e, 0xd9, 0xf3, 0xf8, 0xd9, 0x7a, 0x5c, 0x9b, 0x0c, 0x58,
-	0x57, 0x99, 0xb1, 0x54, 0xda, 0x44, 0x4f, 0x60, 0x36, 0x18, 0x55, 0x27, 0xcd, 0x48, 0x97, 0xbc,
-	0xc1, 0xec, 0x47, 0x74, 0x5c, 0x4b, 0x07, 0x5c, 0xb6, 0x88, 0x88, 0x2e, 0x92, 0x37, 0x18, 0x7d,
-	0x1f, 0x92, 0x2d, 0x08, 0x0d, 0x4b, 0x67, 0xbf, 0xa7, 0x23, 0xda, 0x44, 0x10, 0x60, 0x6e, 0x67,
-	0x25, 0xec, 0xea, 0xb8, 0x2e, 0x61, 0x3f, 0xa9, 0xad, 0xae, 0x5a, 0xb1, 0x58, 0x08, 0xbb, 0x1e,
-	0x98, 0xae, 0xcb, 0x0e, 0xd2, 0xad, 0xae, 0xf9, 0xed, 0x62, 0x11, 0xad, 0xc1, 0x7c, 0xd8, 0xb5,
-	0xec, 0x17, 0x1e, 0xab, 0x04, 0xd7, 0x0c, 0x71, 0x8e, 0x9e, 0x0d, 0x05, 0xee, 0x72, 0x9f, 0x67,
-	0xd4, 0x05, 0x7d, 0x0c, 0x73, 0x6d, 0x49, 0x1a, 0x2e, 0x2e, 0x3b, 0xc7, 0x65, 0x8f, 0xd4, 0x71,
-	0x1a, 0x58, 0xdf, 0xe9, 0x50, 0x8a, 0x3d, 0x17, 0x6b, 0xc7, 0x25, 0x52, 0x6f, 0x63, 0xe1, 0x6b,
-	0x52, 0x25, 0xe9, 0xb1, 0x36, 0xbc, 0x9f, 0x91, 0x2a, 0x09, 0xe3, 0xa5, 0xae, 0x21, 0xbc, 0x97,
-	0xdb, 0xf0, 0xd2, 0xc0, 0x20, 0xde, 0xd3, 0x2d, 0x43, 0x26, 0xbf, 0x33, 0xac, 0x13, 0x69, 0x98,
-	0x64, 0xcb, 0x88, 0x4b, 0x7f, 0xae, 0x2d, 0x43, 0x9e, 0xa8, 0xf3, 0x96, 0xd1, 0x19, 0x68, 0x73,
-	0xcb, 0xb8, 0x30, 0x2a, 0x9a, 0x5b, 0x46, 0xef, 0x6c, 0x2c, 0x19, 0x30, 0x11, 0x3a, 0xad, 0xa3,
-	0x11, 0x18, 0x7c, 0x5e, 0x2a, 0xed, 0x26, 0xdf, 0x41, 0x97, 0x61, 0xa4, 0xb0, 0xfd, 0x6c, 0x73,
-	0xef, 0xf3, 0xdc, 0x6a, 0x52, 0x41, 0x13, 0x30, 0x56, 0x7a, 0x5e, 0xd8, 0xce, 0x17, 0x57, 0x77,
-	0x56, 0xb4, 0x5c, 0x72, 0x00, 0x8d, 0xc3, 0xe8, 0xd6, 0x17, 0xb9, 0xf5, 0x17, 0x85, 0xb5, 0xf5,
-	0x62, 0x32, 0x41, 0x9b, 0x9b, 0x3b, 0xda, 0xca, 0xda, 0xe6, 0xce, 0x5e, 0x2e, 0x39, 0x88, 0x00,
-	0x86, 0x37, 0x76, 0xb6, 0x37, 0xd6, 0xb5, 0xe4, 0xd0, 0xd2, 0x53, 0xb8, 0xda, 0x76, 0x3e, 0x45,
-	0xc3, 0x30, 0xb0, 0x5d, 0x4c, 0xbe, 0x83, 0x86, 0x40, 0xd9, 0x4b, 0x2a, 0xb4, 0xb9, 0x55, 0x4c,
-	0x0e, 0xd0, 0x26, 0xcd, 0x36, 0x04, 0xca, 0x56, 0x72, 0x90, 0xfe, 0xf3, 0x3c, 0x39, 0x74, 0xef,
-	0xef, 0x37, 0x01, 0x05, 0xea, 0x8a, 0x45, 0x5e, 0xc1, 0x46, 0x18, 0x86, 0xb9, 0xec, 0xd0, 0xbb,
-	0x8c, 0xbb, 0xa8, 0x1a, 0x76, 0x66, 0x3e, 0xca, 0xcc, 0x67, 0x5c, 0x9d, 0xfb, 0xf9, 0x3f, 0xbe,
-	0xfb, 0x66, 0x20, 0xa5, 0x5e, 0x0d, 0x3f, 0xc2, 0xb8, 0x8f, 0x94, 0x25, 0xf4, 0x0a, 0x12, 0x79,
-	0xec, 0x21, 0x5e, 0x2f, 0x94, 0x96, 0xaa, 0x33, 0xb3, 0x52, 0x9b, 0xc8, 0x3e, 0xcf, 0xb2, 0xa7,
-	0x51, 0xaa, 0x2d, 0x7b, 0xf6, 0x67, 0xc4, 0x78, 0x8b, 0x4c, 0x18, 0xe6, 0x92, 0x11, 0xc3, 0x88,
-	0x2a, 0x4b, 0x67, 0x52, 0xcb, 0xfc, 0xa5, 0x67, 0xd9, 0x7f, 0xe9, 0x59, 0x5e, 0xaf, 0xdb, 0xde,
-	0x89, 0xfa, 0x3e, 0xeb, 0xe0, 0x76, 0x46, 0x95, 0x74, 0x10, 0x7c, 0x51, 0x22, 0xc6, 0x5b, 0x3a,
-	0x9e, 0x32, 0x0c, 0x73, 0x01, 0x89, 0xfe, 0xa2, 0xca, 0xd6, 0x91, 0xfd, 0x89, 0x01, 0x2d, 0x45,
-	0x0d, 0xe8, 0x4b, 0x18, 0xa4, 0x17, 0x32, 0xc4, 0x59, 0x91, 0x17, 0xba, 0x33, 0x73, 0x72, 0xa3,
-	0xe0, 0x6c, 0x86, 0x75, 0x71, 0x0d, 0xb5, 0xcf, 0x08, 0xfa, 0x56, 0x81, 0x29, 0x69, 0x91, 0x10,
-	0x2d, 0x06, 0xa6, 0x59, 0x5e, 0xf6, 0x8a, 0x1c, 0xd2, 0x06, 0xeb, 0x6f, 0x5d, 0xfd, 0x44, 0x36,
-	0xa4, 0xd3, 0x34, 0xcb, 0xad, 0x8b, 0xea, 0x6d, 0x36, 0x60, 0x73, 0xb3, 0x87, 0x9e, 0x67, 0x53,
-	0x82, 0xbf, 0x51, 0x00, 0xb5, 0x97, 0x0a, 0xd1, 0xbc, 0x2f, 0x92, 0x08, 0x6c, 0xd7, 0x23, 0xed,
-	0x82, 0x94, 0x1f, 0x33, 0x90, 0x0f, 0xd0, 0xfd, 0xf8, 0x79, 0x96, 0x03, 0x63, 0xbc, 0x49, 0x4b,
-	0x8d, 0x82, 0xb7, 0xb8, 0x32, 0x64, 0x27, 0xde, 0x32, 0x7d, 0xe1, 0xed, 0xd7, 0x0a, 0x4c, 0x49,
-	0x8b, 0x96, 0x02, 0x61, 0x5c, 0x41, 0x33, 0x12, 0xa1, 0x20, 0x6d, 0xa9, 0x3b, 0xd2, 0xfe, 0xa4,
-	0xf8, 0x4f, 0x59, 0xd2, 0x6a, 0x42, 0x40, 0x70, 0xd1, 0xb7, 0xbe, 0x48, 0x68, 0x3b, 0x0c, 0x5a,
-	0x41, 0xcd, 0xf5, 0x42, 0x1e, 0x61, 0xfd, 0x1a, 0xfb, 0x94, 0xc0, 0xdf, 0x2b, 0xec, 0x89, 0x4c,
-	0x06, 0x55, 0xf5, 0xc5, 0x15, 0x83, 0xf3, 0x46, 0xac, 0x8f, 0x10, 0xe1, 0x27, 0x0c, 0xf4, 0x23,
-	0xf4, 0xf0, 0xbc, 0x7c, 0xfa, 0x40, 0x19, 0xa7, 0x91, 0x37, 0x71, 0xc1, 0x69, 0xa7, 0x9b, 0x7a,
-	0x27, 0x4e, 0x33, 0x7d, 0xe3, 0xf4, 0x77, 0x0a, 0xcc, 0x44, 0xde, 0xeb, 0x05, 0xda, 0x4e, 0xf7,
-	0xfe, 0x48, 0xb4, 0x82, 0xcc, 0xa5, 0xee, 0xc9, 0xfc, 0xab, 0xe2, 0x3f, 0x99, 0x44, 0x54, 0x0c,
-	0xee, 0x04, 0x34, 0x1a, 0x7b, 0xf5, 0x8c, 0x04, 0xa9, 0x31, 0x90, 0x9b, 0x6a, 0xbe, 0x17, 0x4a,
-	0x3d, 0xd6, 0xf5, 0x3e, 0xed, 0x9a, 0xb2, 0xfa, 0x17, 0x85, 0xbd, 0xc8, 0x44, 0x55, 0x39, 0x7c,
-	0x21, 0xc6, 0x03, 0xbe, 0xd5, 0xc9, 0x4d, 0x48, 0x76, 0x8d, 0x0d, 0xe0, 0x09, 0x7a, 0x7c, 0x5e,
-	0x96, 0x03, 0xa0, 0x19, 0xd1, 0x71, 0x65, 0x02, 0x41, 0xf4, 0x19, 0x2a, 0x09, 0x9d, 0x88, 0xce,
-	0xf4, 0x93, 0xe8, 0x3f, 0x28, 0xfe, 0x43, 0x50, 0x2c, 0xec, 0x33, 0x94, 0x26, 0x22, 0x61, 0x0b,
-	0x7a, 0x97, 0x7a, 0xa2, 0xf7, 0xcf, 0x0a, 0x64, 0xa2, 0xcb, 0x0e, 0xe8, 0x56, 0x40, 0xc5, 0x31,
-	0x57, 0xe5, 0x48, 0x8c, 0xbb, 0x0c, 0xe3, 0xa7, 0xea, 0x7a, 0x2f, 0xd4, 0xd6, 0x4f, 0x0c, 0xde,
-	0x31, 0x25, 0xf6, 0x8f, 0x0a, 0x4c, 0x47, 0x14, 0x1f, 0x50, 0x73, 0x23, 0x8d, 0x83, 0x7a, 0x33,
-	0xde, 0x49, 0x68, 0x77, 0x85, 0x01, 0x7f, 0x8c, 0x3e, 0x3a, 0x2f, 0xb9, 0x4d, 0xb0, 0x8c, 0xda,
-	0xe8, 0x32, 0x86, 0xa0, 0xb6, 0x63, 0x9d, 0xa3, 0x13, 0xb5, 0x99, 0xfe, 0x51, 0xfb, 0xad, 0x02,
-	0x99, 0xe8, 0xaa, 0x88, 0x00, 0xdc, 0xb1, 0x6c, 0x12, 0x09, 0x58, 0x50, 0xba, 0xd4, 0x23, 0xa5,
-	0xd1, 0x37, 0xde, 0x16, 0xb5, 0xc6, 0xdc, 0xd2, 0x2e, 0x56, 0xad, 0x35, 0xcb, 0xd1, 0x2b, 0xb4,
-	0xe3, 0x80, 0x5a, 0xa5, 0x68, 0x9b, 0x6a, 0x8d, 0x83, 0x7a, 0x33, 0xde, 0xa9, 0x57, 0xb5, 0x36,
-	0xc1, 0x06, 0xd4, 0x1a, 0x43, 0x6d, 0xc7, 0x2b, 0xf6, 0xc5, 0xaa, 0xb5, 0x85, 0xda, 0x53, 0xb5,
-	0xc6, 0x00, 0xee, 0x78, 0x63, 0xef, 0xbf, 0x5a, 0x4f, 0x29, 0xfd, 0x85, 0x02, 0xc9, 0xd0, 0xdb,
-	0x9b, 0x1b, 0xb8, 0x9c, 0x49, 0xc0, 0xcc, 0xc9, 0x8d, 0x62, 0x96, 0x3f, 0x64, 0x90, 0x7e, 0x88,
-	0xb2, 0xe7, 0x84, 0x44, 0x7f, 0x8c, 0xa6, 0x23, 0xde, 0x89, 0x85, 0x0a, 0xe3, 0x5f, 0x91, 0x23,
-	0x49, 0xda, 0x62, 0x88, 0xf2, 0xea, 0x6a, 0x2f, 0xb3, 0x7a, 0xc4, 0x7a, 0xa5, 0x53, 0xfa, 0x5b,
-	0x05, 0x26, 0x65, 0xaf, 0xc5, 0x68, 0xc1, 0x5f, 0x05, 0x91, 0x08, 0x17, 0x63, 0x3c, 0x04, 0x7d,
-	0x1f, 0x33, 0xb0, 0x0f, 0xd1, 0x83, 0xf3, 0xce, 0x28, 0x07, 0xc8, 0x58, 0x8c, 0x78, 0x71, 0x16,
-	0x2c, 0xc6, 0xbf, 0x47, 0x77, 0x62, 0x31, 0xd3, 0x27, 0x16, 0x7f, 0xa3, 0xc0, 0x74, 0xc4, 0xeb,
-	0xb5, 0xc0, 0x19, 0xff, 0xb6, 0x1d, 0x89, 0x53, 0x10, 0xb8, 0xd4, 0x25, 0x81, 0xab, 0x1f, 0xbd,
-	0xfc, 0xf0, 0x80, 0x78, 0x87, 0x8d, 0xfd, 0xe5, 0x8a, 0x55, 0xcf, 0xee, 0x3b, 0x56, 0x45, 0xd7,
-	0x9d, 0x6c, 0xe5, 0x90, 0x38, 0xb6, 0xeb, 0xe9, 0x95, 0xa3, 0xf7, 0x69, 0xda, 0x03, 0x2b, 0xfb,
-	0xfa, 0x83, 0x6c, 0xe8, 0x3f, 0xe8, 0xee, 0x0f, 0x33, 0x28, 0x1f, 0xfc, 0x27, 0x00, 0x00, 0xff,
-	0xff, 0x75, 0x52, 0x5e, 0x6d, 0xba, 0x2b, 0x00, 0x00,
+	// 3142 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x5b, 0xcd, 0x6f, 0x1b, 0xc7,
+	0x15, 0xcf, 0xea, 0xcb, 0xd2, 0x93, 0x25, 0x51, 0x63, 0x7d, 0xd0, 0x94, 0x22, 0x4b, 0x6b, 0x27,
+	0x76, 0x98, 0x48, 0x72, 0x1d, 0xc7, 0x49, 0x9c, 0x26, 0x0e, 0x29, 0xca, 0x34, 0x63, 0x89, 0x22,
+	0x96, 0x92, 0x9d, 0x18, 0x81, 0x37, 0x4b, 0xee, 0x48, 0xda, 0x88, 0xdc, 0x65, 0x77, 0x97, 0x8e,
+	0xe5, 0xc2, 0x97, 0x1e, 0x5a, 0xa0, 0xa7, 0x16, 0x01, 0xda, 0x02, 0x0d, 0x10, 0x14, 0x45, 0x5a,
+	0x14, 0x05, 0xda, 0x02, 0xed, 0xad, 0xa7, 0xf4, 0xdc, 0x5b, 0xfb, 0x27, 0xe4, 0xda, 0xbf, 0xa0,
+	0x87, 0x16, 0xf3, 0xb1, 0xab, 0xe5, 0x72, 0x3f, 0x28, 0x92, 0x2a, 0x7a, 0xc8, 0xc9, 0xda, 0x79,
+	0x6f, 0xde, 0xfc, 0xe6, 0xb7, 0xbf, 0x79, 0x9c, 0x9d, 0x37, 0x86, 0x15, 0xc5, 0x5a, 0xc7, 0x4f,
+	0x6d, 0x6c, 0xea, 0x4a, 0x6d, 0x5d, 0x69, 0x68, 0xeb, 0x4a, 0xa3, 0x51, 0xd3, 0xaa, 0x8a, 0xad,
+	0x19, 0xfa, 0x5a, 0xc3, 0x34, 0x6c, 0x03, 0x0d, 0x2a, 0x0d, 0x2d, 0xb5, 0x78, 0x60, 0x18, 0x07,
+	0x35, 0xcc, 0x5c, 0x74, 0xdd, 0xb0, 0xa9, 0x87, 0xc5, 0x5c, 0x52, 0x0b, 0xdc, 0x4a, 0x9f, 0x2a,
+	0xcd, 0xfd, 0x75, 0x5c, 0x6f, 0xd8, 0xc7, 0xcc, 0x28, 0xfe, 0x75, 0x00, 0xc6, 0x33, 0x27, 0x51,
+	0xd1, 0x24, 0x0c, 0x68, 0x6a, 0x52, 0x58, 0x16, 0xae, 0x0d, 0x4a, 0x03, 0x9a, 0x8a, 0x10, 0x0c,
+	0xe9, 0x4a, 0x1d, 0x27, 0x07, 0x96, 0x85, 0x6b, 0x63, 0x12, 0xfd, 0x1b, 0x2d, 0xc3, 0xb8, 0x8a,
+	0xad, 0xaa, 0xa9, 0x35, 0x48, 0x97, 0xe4, 0x20, 0x35, 0x79, 0x9b, 0xd0, 0x55, 0x98, 0x32, 0xcc,
+	0x03, 0x45, 0xd7, 0x9e, 0xd1, 0xa8, 0xb2, 0xa6, 0x26, 0x87, 0x68, 0xc8, 0x49, 0x6f, 0x73, 0x21,
+	0x87, 0x5e, 0x03, 0x64, 0x61, 0xf3, 0x89, 0x56, 0xc5, 0x72, 0xc3, 0x34, 0xf6, 0xb5, 0x1a, 0x26,
+	0xbe, 0xc3, 0x34, 0x62, 0x82, 0x5b, 0x4a, 0xcc, 0x50, 0xc8, 0xa1, 0xcb, 0x30, 0xd1, 0x50, 0x8e,
+	0x6b, 0x86, 0xa2, 0xca, 0x55, 0x43, 0xc5, 0xd5, 0xe4, 0x08, 0x75, 0x3c, 0xcf, 0x1b, 0x37, 0x48,
+	0x1b, 0xba, 0x09, 0x73, 0x8e, 0x13, 0xd6, 0x89, 0x9b, 0x29, 0x33, 0x60, 0xc9, 0x73, 0xd4, 0x7b,
+	0x86, 0x5b, 0x37, 0x99, 0xb1, 0x4c, 0x6d, 0xde, 0x5e, 0x2a, 0x6e, 0xe9, 0x35, 0xda, 0xd2, 0x2b,
+	0x87, 0x3d, 0xbd, 0xc4, 0x6f, 0x04, 0xb8, 0xe0, 0x61, 0x6f, 0x4b, 0xb3, 0xec, 0x82, 0x8d, 0xeb,
+	0xff, 0xdf, 0x2c, 0x5e, 0x87, 0x19, 0xbf, 0x37, 0x05, 0xc7, 0xc8, 0x44, 0xad, 0xfe, 0x45, 0xa5,
+	0x8e, 0xc5, 0x22, 0x24, 0x37, 0x4c, 0xac, 0xd8, 0xd8, 0x33, 0x57, 0x09, 0x7f, 0xaf, 0x89, 0x2d,
+	0x1b, 0xdd, 0x80, 0x71, 0x8f, 0x2a, 0xe9, 0x9c, 0xc7, 0x6f, 0x24, 0xd6, 0x94, 0x86, 0xb6, 0xe6,
+	0xf5, 0xf6, 0x3a, 0x89, 0xaf, 0xc2, 0xc5, 0x80, 0x78, 0x56, 0xc3, 0xd0, 0x2d, 0xec, 0xe7, 0x4e,
+	0xbc, 0x0a, 0xb3, 0x79, 0x6c, 0x07, 0x8c, 0xec, 0x77, 0xdc, 0x82, 0x39, 0xbf, 0x23, 0x0f, 0xd9,
+	0x0d, 0xc6, 0x22, 0x24, 0xf7, 0x1a, 0x6a, 0xff, 0xe6, 0x9c, 0x86, 0x64, 0x0e, 0xd7, 0x70, 0x60,
+	0x3c, 0xff, 0x4c, 0x7e, 0x24, 0xc0, 0x1c, 0xd1, 0x52, 0x80, 0xeb, 0x0c, 0x0c, 0xd7, 0xb4, 0xba,
+	0x66, 0x73, 0x6f, 0xf6, 0x80, 0xe6, 0x60, 0xc4, 0xd8, 0xdf, 0xb7, 0xb0, 0x4d, 0x15, 0x36, 0x28,
+	0xf1, 0xa7, 0x20, 0x05, 0x0d, 0x06, 0x2a, 0x68, 0x0e, 0x46, 0x2c, 0xac, 0x98, 0xd5, 0x43, 0xaa,
+	0xb0, 0x31, 0x89, 0x3f, 0x89, 0x35, 0x98, 0x6f, 0x03, 0xc2, 0x49, 0xbd, 0x04, 0xe3, 0xb6, 0x61,
+	0x2b, 0x35, 0xb9, 0x6a, 0x34, 0x75, 0x07, 0x0f, 0xd0, 0xa6, 0x0d, 0xd2, 0x82, 0xae, 0xc3, 0x88,
+	0x89, 0xad, 0x66, 0x8d, 0x80, 0x1a, 0xbc, 0x36, 0x7e, 0x23, 0xe9, 0x27, 0xc8, 0x59, 0x2e, 0x12,
+	0xf7, 0x13, 0xef, 0xc0, 0xec, 0xbd, 0xdd, 0xdd, 0x52, 0x41, 0xb7, 0xf1, 0x81, 0x49, 0x5d, 0xee,
+	0x61, 0x45, 0xc5, 0x26, 0x4a, 0xc0, 0xe0, 0x11, 0x3e, 0xa6, 0x63, 0x8c, 0x49, 0xe4, 0x4f, 0xc2,
+	0xc3, 0x13, 0xa5, 0xd6, 0x74, 0x96, 0x14, 0x7b, 0x10, 0xff, 0x3d, 0x04, 0x53, 0xbe, 0x08, 0xe8,
+	0x25, 0x98, 0xf4, 0xbc, 0x07, 0xd9, 0x25, 0x7a, 0xc2, 0xd3, 0x5a, 0xc8, 0xa1, 0x9b, 0x70, 0xee,
+	0x90, 0x0e, 0x66, 0x71, 0xb8, 0x29, 0x0a, 0x37, 0x10, 0x8f, 0xe4, 0xb8, 0xa2, 0x97, 0x61, 0xaa,
+	0xd9, 0xa8, 0x69, 0xfa, 0x91, 0xac, 0x2a, 0xb6, 0x22, 0x37, 0xcd, 0x1a, 0x5f, 0xc8, 0x13, 0xac,
+	0x39, 0xa7, 0xd8, 0xca, 0x9e, 0xb4, 0x85, 0x6e, 0xc0, 0xec, 0xa7, 0x86, 0xa6, 0xcb, 0xba, 0x61,
+	0x6b, 0xfb, 0x0e, 0x14, 0xe2, 0xcd, 0xe8, 0xbe, 0x40, 0x8c, 0x45, 0x8f, 0x8d, 0xf4, 0xb9, 0x0e,
+	0x33, 0x4a, 0xf5, 0xa8, 0xbd, 0x0b, 0x5b, 0xd7, 0x48, 0xa9, 0x1e, 0xf9, 0x7b, 0xdc, 0x84, 0x39,
+	0x6c, 0x9a, 0x86, 0xd9, 0xde, 0x87, 0xad, 0xed, 0x19, 0x6a, 0xf5, 0xf7, 0xba, 0x05, 0xf3, 0x96,
+	0xad, 0xd8, 0x4d, 0xab, 0xbd, 0x1b, 0xcb, 0x98, 0xb3, 0xcc, 0xec, 0xef, 0x77, 0x1b, 0x2e, 0xd6,
+	0x0c, 0xee, 0xdc, 0xd6, 0x93, 0x65, 0xcd, 0x79, 0xc7, 0xc1, 0xdf, 0xf7, 0x0d, 0x98, 0xb7, 0x9f,
+	0xca, 0x81, 0xd3, 0x1b, 0x63, 0x50, 0xed, 0xa7, 0x99, 0xf6, 0x09, 0xbe, 0x0f, 0x8b, 0xda, 0xc9,
+	0xcb, 0x68, 0xef, 0x0b, 0xb4, 0x6f, 0xca, 0xe3, 0xe3, 0x8f, 0xf0, 0x1a, 0x8c, 0xd5, 0x15, 0xd3,
+	0x3a, 0x54, 0x6a, 0xd8, 0x4c, 0x8e, 0x2f, 0x0b, 0xd7, 0x26, 0x6f, 0x4c, 0xd2, 0x17, 0xbd, 0xed,
+	0xb4, 0x4a, 0x27, 0x0e, 0x24, 0xb1, 0xe2, 0x27, 0x58, 0xb7, 0x65, 0xac, 0xab, 0x0d, 0x43, 0xd3,
+	0x6d, 0x3a, 0xca, 0x79, 0x96, 0x58, 0xa9, 0x65, 0x93, 0x1b, 0xf6, 0xa4, 0x2d, 0xf1, 0x01, 0x2c,
+	0xb2, 0xb4, 0xe6, 0x13, 0x8d, 0xb3, 0x76, 0x6f, 0xc1, 0xb8, 0x07, 0x19, 0x4f, 0x1b, 0x33, 0x41,
+	0x32, 0x93, 0xbc, 0x8e, 0x62, 0x16, 0x2e, 0xe6, 0xb1, 0x1d, 0x12, 0xb4, 0x33, 0x79, 0x8b, 0xbb,
+	0x90, 0x0a, 0x8a, 0xc1, 0xd7, 0x72, 0xb7, 0xc8, 0x1e, 0xc0, 0x22, 0x4b, 0x92, 0x7d, 0x9e, 0xf1,
+	0x26, 0x2c, 0xb2, 0x64, 0xd9, 0xdb, 0xa4, 0x33, 0x30, 0x7f, 0xdf, 0xd0, 0x8f, 0xb0, 0xd9, 0x7d,
+	0x46, 0xf9, 0xcf, 0x10, 0x4c, 0xb7, 0xc5, 0xe8, 0x34, 0xa7, 0xdc, 0xf2, 0xe7, 0x94, 0x45, 0x3a,
+	0xf5, 0x10, 0x4c, 0xdf, 0x66, 0x95, 0x6f, 0xb3, 0x4a, 0x40, 0x56, 0x79, 0x04, 0x4b, 0x2c, 0xab,
+	0xb4, 0xc9, 0xc6, 0x59, 0x0d, 0x6f, 0x05, 0xad, 0xb2, 0xb9, 0x60, 0xa9, 0xb5, 0xae, 0xb3, 0x1c,
+	0x2c, 0xe4, 0xb1, 0x1d, 0x1a, 0xb8, 0xc3, 0x65, 0xf6, 0x21, 0x2c, 0x06, 0x47, 0xe1, 0xd9, 0xa5,
+	0x7b, 0x7c, 0x8f, 0x60, 0x89, 0xe5, 0x97, 0x33, 0x98, 0x7b, 0x1e, 0x96, 0x58, 0x8e, 0xe9, 0x75,
+	0xfa, 0x77, 0xd8, 0x66, 0xad, 0x97, 0x00, 0x17, 0x3c, 0x9d, 0xdd, 0x8f, 0x88, 0x6b, 0x30, 0x74,
+	0xa4, 0xe9, 0xac, 0xcf, 0x24, 0xcf, 0x9a, 0x1e, 0xbf, 0xfb, 0x9a, 0xae, 0x4a, 0xd4, 0xc3, 0xd9,
+	0xa5, 0x05, 0x71, 0xdf, 0xe5, 0x2e, 0x2d, 0x00, 0x8f, 0xbb, 0x4b, 0xfb, 0xf1, 0x00, 0xc1, 0xbb,
+	0x5f, 0x6b, 0x3e, 0xcd, 0x65, 0xbb, 0x48, 0x8a, 0x29, 0x18, 0x75, 0x74, 0xcf, 0x53, 0xad, 0xfb,
+	0x4c, 0x36, 0xc2, 0x6a, 0x85, 0xe7, 0xba, 0x01, 0xb5, 0x42, 0x7c, 0x9b, 0x16, 0xf9, 0xfc, 0xad,
+	0x63, 0x9e, 0xd3, 0xdc, 0x67, 0x62, 0x6b, 0x28, 0x96, 0xf5, 0x99, 0x61, 0x3a, 0x9f, 0x3a, 0xee,
+	0x33, 0x49, 0x8c, 0x26, 0xb6, 0xb1, 0x4e, 0x81, 0x34, 0x8c, 0x9a, 0x56, 0x3d, 0xf6, 0x7e, 0xe3,
+	0x5c, 0x70, 0x8d, 0x25, 0x6a, 0x23, 0x1f, 0x39, 0xe8, 0x26, 0x8c, 0x35, 0x4c, 0x5c, 0xd5, 0x2c,
+	0xa2, 0xa3, 0x73, 0x94, 0xf3, 0x39, 0xce, 0x05, 0x9b, 0x6b, 0xc9, 0xb1, 0x4a, 0x27, 0x8e, 0xe2,
+	0x63, 0x58, 0x66, 0xab, 0x33, 0x80, 0x11, 0x47, 0x06, 0xb7, 0x83, 0x34, 0x9a, 0x6c, 0x89, 0x1d,
+	0xaa, 0xd2, 0xbb, 0xf0, 0x62, 0x1e, 0xdb, 0x11, 0xc1, 0x3b, 0xd4, 0xd8, 0xc7, 0xb0, 0x14, 0x16,
+	0x87, 0x2b, 0xa5, 0x17, 0x94, 0x8f, 0x61, 0x99, 0xad, 0xd3, 0x33, 0x62, 0xa1, 0x00, 0xcb, 0x6c,
+	0xad, 0xf6, 0x4e, 0xc4, 0x43, 0x98, 0xdb, 0x3d, 0xd4, 0xf4, 0x03, 0x2b, 0x6b, 0x28, 0xa6, 0xda,
+	0x85, 0x7e, 0xe9, 0xa7, 0x92, 0xf9, 0x04, 0x9b, 0x5c, 0xbd, 0xfc, 0x49, 0x54, 0xe1, 0x32, 0x53,
+	0x42, 0x70, 0x78, 0x07, 0xe6, 0xbb, 0x41, 0x34, 0x2c, 0x50, 0x1a, 0x42, 0x3a, 0xfa, 0x99, 0xc8,
+	0x63, 0x3b, 0x7a, 0x88, 0x0e, 0x99, 0xa8, 0xc0, 0x4a, 0x44, 0x28, 0xae, 0x8a, 0x1e, 0xe1, 0xaa,
+	0x70, 0x99, 0x09, 0xe3, 0x4c, 0x49, 0xd9, 0x82, 0xcb, 0x4c, 0x1e, 0x7d, 0xe1, 0xe5, 0x23, 0x98,
+	0xd9, 0x3e, 0xce, 0xe1, 0x27, 0x5a, 0x15, 0x5b, 0xfd, 0xcd, 0x6f, 0xe2, 0x27, 0xb0, 0xc2, 0x34,
+	0x12, 0x34, 0x80, 0x03, 0xf3, 0x9d, 0x20, 0x32, 0x2e, 0xb2, 0xed, 0x44, 0x50, 0x37, 0xff, 0xaf,
+	0x5a, 0x1e, 0xdb, 0x51, 0xe1, 0x3b, 0x64, 0xe1, 0x31, 0x5c, 0x0a, 0x0d, 0xc4, 0xb5, 0xd1, 0x13,
+	0xd0, 0x4f, 0x60, 0x85, 0x29, 0xe3, 0xcc, 0xa8, 0xf8, 0x00, 0x56, 0x98, 0x2a, 0xfa, 0xc0, 0xc6,
+	0xdf, 0x87, 0x61, 0x66, 0xcb, 0x90, 0x94, 0x8d, 0x9a, 0xd1, 0xec, 0x26, 0x69, 0x2c, 0xc3, 0xf8,
+	0x01, 0x36, 0x9c, 0x7d, 0x2b, 0xd5, 0xc5, 0xa8, 0xe4, 0x6d, 0x42, 0xaf, 0xc2, 0xb4, 0xe7, 0x51,
+	0xb6, 0x8d, 0x23, 0xec, 0x1c, 0x0a, 0x26, 0x3c, 0x86, 0x5d, 0xd2, 0x4e, 0xb6, 0xe4, 0x5e, 0xe7,
+	0x4a, 0x73, 0x7f, 0x1f, 0x9b, 0xb2, 0x6d, 0xb3, 0x9d, 0xff, 0x84, 0x34, 0xe3, 0xb1, 0x66, 0xa9,
+	0x71, 0x77, 0x77, 0x0b, 0xbd, 0x0b, 0x0b, 0xde, 0x5e, 0x75, 0xcd, 0xed, 0x69, 0x69, 0xcf, 0x30,
+	0xfd, 0x11, 0x9d, 0x90, 0x92, 0x1e, 0x97, 0x6d, 0x8d, 0xf7, 0x2e, 0x6b, 0xcf, 0x30, 0x7a, 0x05,
+	0x12, 0x2d, 0x08, 0x55, 0x43, 0xa1, 0xbf, 0xa7, 0xa3, 0xd2, 0x94, 0x17, 0x60, 0x6e, 0x27, 0xe3,
+	0x77, 0x35, 0x2d, 0x4b, 0xa3, 0x3f, 0xa9, 0xad, 0xae, 0x52, 0xb9, 0x5c, 0xf0, 0xbb, 0x1e, 0xe8,
+	0x96, 0x45, 0xb7, 0xf9, 0xad, 0xae, 0xf9, 0x62, 0xb9, 0x8c, 0x36, 0x60, 0xc9, 0xef, 0x2a, 0x3b,
+	0x87, 0xb6, 0xfb, 0x1a, 0xae, 0xa9, 0x7c, 0x97, 0xbf, 0xe0, 0xeb, 0x58, 0x62, 0x3e, 0x77, 0x89,
+	0x0b, 0x7a, 0x0f, 0x16, 0xdb, 0x82, 0x34, 0x2d, 0x2c, 0x9b, 0x4f, 0x65, 0x5b, 0xab, 0x63, 0xba,
+	0xd9, 0x1f, 0x6d, 0x61, 0x81, 0x84, 0xd8, 0xb3, 0xb0, 0xf4, 0x74, 0x57, 0xab, 0xb7, 0xb1, 0xf0,
+	0x99, 0xb6, 0xaf, 0xd1, 0x1d, 0x7f, 0x2b, 0xde, 0x87, 0xda, 0xbe, 0xe6, 0xc7, 0x4b, 0x5c, 0x7d,
+	0x78, 0xcf, 0xb7, 0xe1, 0x25, 0x1d, 0x5b, 0xf0, 0x26, 0x60, 0x50, 0x55, 0xac, 0xe4, 0x04, 0x1d,
+	0x82, 0xfc, 0x89, 0x16, 0x60, 0x4c, 0x55, 0x2c, 0xae, 0x90, 0x49, 0x96, 0x61, 0x54, 0xc5, 0x62,
+	0xca, 0xb8, 0x02, 0x93, 0xc4, 0x58, 0x37, 0x54, 0x5c, 0x97, 0x1b, 0x86, 0x69, 0x27, 0xa7, 0xe8,
+	0x6b, 0x3d, 0xaf, 0x2a, 0xd6, 0x36, 0x69, 0x2c, 0x19, 0xa6, 0x27, 0x0f, 0x05, 0x69, 0xba, 0x83,
+	0xc5, 0x17, 0xd8, 0x2d, 0x20, 0x0f, 0x45, 0x85, 0x3f, 0x55, 0x1e, 0x0a, 0x0e, 0x14, 0x9f, 0x87,
+	0xe2, 0x81, 0xba, 0x79, 0xe8, 0xcc, 0xa8, 0x70, 0xf3, 0x50, 0x1f, 0xd8, 0xf8, 0xa7, 0x00, 0x33,
+	0xf9, 0x8d, 0x52, 0xa9, 0x59, 0x29, 0x37, 0x2b, 0x5d, 0xe4, 0xa1, 0x96, 0x0f, 0xd5, 0x81, 0xb8,
+	0x0f, 0xd5, 0x57, 0x20, 0x51, 0x35, 0xb1, 0x4a, 0xb6, 0xca, 0x4a, 0xcd, 0x92, 0xf7, 0xb5, 0x1a,
+	0xe6, 0x29, 0x69, 0xca, 0xd3, 0x7e, 0x57, 0xab, 0x61, 0xf4, 0x22, 0x40, 0xc3, 0x34, 0x3e, 0xc5,
+	0x55, 0xdb, 0x29, 0x53, 0x8c, 0x91, 0x6d, 0x32, 0x6d, 0x29, 0xe4, 0x88, 0xd9, 0x36, 0x1a, 0x5a,
+	0x95, 0xed, 0xc2, 0xd9, 0x76, 0x7d, 0x8c, 0xb6, 0xd0, 0x02, 0x83, 0xab, 0xc7, 0xa0, 0xb9, 0x75,
+	0xf0, 0x12, 0x02, 0xbb, 0x05, 0xe8, 0x31, 0x2a, 0xfc, 0xa9, 0xf4, 0x18, 0x1c, 0x28, 0x5e, 0x8f,
+	0xf1, 0x40, 0x5d, 0x3d, 0x9e, 0x19, 0x15, 0xae, 0x1e, 0xfb, 0xc0, 0xc6, 0xbf, 0x04, 0x98, 0xce,
+	0x3c, 0x2c, 0x97, 0x8b, 0xe5, 0x33, 0x17, 0xe3, 0x1c, 0xf9, 0x50, 0x3d, 0x38, 0x29, 0x95, 0xf1,
+	0x27, 0x24, 0xc2, 0x84, 0x52, 0xad, 0x62, 0xcb, 0x92, 0x8f, 0xf0, 0xf1, 0x89, 0xf8, 0xc6, 0x59,
+	0xe3, 0x7d, 0x7c, 0x5c, 0xc8, 0xa1, 0x34, 0x4c, 0x5b, 0xb8, 0x6a, 0x62, 0x5b, 0x3e, 0x71, 0xe5,
+	0x2a, 0x9c, 0x62, 0x86, 0x8c, 0xe3, 0x4d, 0xd2, 0x2b, 0x93, 0xaa, 0x62, 0xea, 0xfc, 0x7b, 0x71,
+	0x94, 0x36, 0x64, 0xa4, 0xe2, 0xc9, 0x61, 0x4c, 0xdb, 0xa4, 0x3b, 0x38, 0x90, 0x68, 0xef, 0x13,
+	0x70, 0x18, 0x13, 0x1a, 0xf8, 0x54, 0x87, 0x31, 0x01, 0x51, 0xe2, 0x0f, 0x63, 0x62, 0xf0, 0xb9,
+	0x87, 0x31, 0x67, 0x30, 0x77, 0xf7, 0x30, 0xa6, 0xd7, 0xe9, 0x7f, 0x2d, 0x40, 0x2a, 0xf3, 0xac,
+	0x69, 0xe2, 0x32, 0x2b, 0x63, 0x66, 0x9b, 0xd6, 0x99, 0x2b, 0xf3, 0x55, 0x98, 0xae, 0x1a, 0xba,
+	0x8e, 0xab, 0x34, 0xa6, 0x65, 0x9b, 0x9a, 0x7e, 0xe0, 0x6c, 0xdd, 0x4e, 0x0c, 0x65, 0xda, 0x8e,
+	0x56, 0xe0, 0x7c, 0xa3, 0x59, 0xa9, 0x69, 0xd6, 0xa1, 0xec, 0x39, 0xd6, 0x18, 0xe7, 0x6d, 0x34,
+	0x1b, 0xd6, 0xe0, 0x2a, 0x17, 0x59, 0xe8, 0x44, 0x1c, 0x56, 0x32, 0x41, 0x8c, 0x5f, 0x62, 0x8c,
+	0x87, 0x77, 0x6e, 0xa1, 0x7e, 0x1b, 0xae, 0x10, 0xc1, 0xc4, 0x0e, 0xd5, 0xe1, 0x0b, 0xf8, 0x14,
+	0x5e, 0x8a, 0x09, 0xc7, 0x85, 0xd8, 0x07, 0xe8, 0x35, 0xb8, 0xca, 0x15, 0xf9, 0xbf, 0x20, 0xaa,
+	0x04, 0x57, 0xb9, 0x46, 0xfb, 0xc4, 0x55, 0xfa, 0x17, 0x02, 0x4c, 0xf9, 0x4e, 0xf4, 0xd0, 0x28,
+	0x0c, 0xdd, 0xdb, 0xdd, 0x2d, 0x25, 0x5e, 0x40, 0xe7, 0x61, 0xb4, 0x50, 0xbc, 0xbb, 0xb5, 0xf7,
+	0x61, 0x2e, 0x9b, 0x10, 0xd0, 0x14, 0x8c, 0xef, 0xde, 0x2b, 0x14, 0xf3, 0xe5, 0xec, 0x4e, 0x46,
+	0xca, 0x25, 0x06, 0xd0, 0x04, 0x8c, 0x6d, 0x7f, 0x94, 0xdb, 0x7c, 0x50, 0xd8, 0xd8, 0x2c, 0x27,
+	0x06, 0xc9, 0xe3, 0xd6, 0x8e, 0x94, 0xd9, 0xd8, 0xda, 0xd9, 0xcb, 0x25, 0x86, 0xd0, 0x24, 0x40,
+	0x7e, 0xa3, 0x24, 0x97, 0xf6, 0xb2, 0xe5, 0xbd, 0x6c, 0x62, 0x18, 0x8d, 0xc3, 0xb9, 0xcc, 0xc3,
+	0xb2, 0x5c, 0x2e, 0x96, 0x13, 0x23, 0x68, 0x16, 0xa6, 0x33, 0x8f, 0xf6, 0xa4, 0x4d, 0xb9, 0xbc,
+	0x29, 0x91, 0xfe, 0x72, 0x76, 0xaf, 0x9c, 0x38, 0x87, 0x00, 0x46, 0xee, 0xef, 0x14, 0xef, 0x6f,
+	0x4a, 0x89, 0xd1, 0xf4, 0x75, 0x18, 0x73, 0xb5, 0x4e, 0x30, 0x7d, 0x50, 0xde, 0x29, 0x32, 0x4c,
+	0x25, 0x69, 0x67, 0x77, 0x27, 0xbb, 0x77, 0x37, 0x21, 0x90, 0xa0, 0xa4, 0x5d, 0x7e, 0xf0, 0x7a,
+	0x62, 0x20, 0x7d, 0x07, 0xa6, 0xdb, 0x4e, 0xca, 0xd0, 0x08, 0x0c, 0x14, 0xcb, 0x89, 0x17, 0xd0,
+	0x30, 0x08, 0x7b, 0x09, 0x81, 0x3c, 0x6e, 0x97, 0x13, 0x03, 0xe4, 0x91, 0x60, 0x1e, 0x06, 0x61,
+	0x3b, 0x31, 0x44, 0xfe, 0xb9, 0x97, 0x18, 0xbe, 0xf1, 0xd3, 0x37, 0x00, 0x79, 0xaa, 0xc3, 0x9c,
+	0x60, 0x84, 0x61, 0x84, 0xad, 0x06, 0xf4, 0x22, 0x7d, 0x5d, 0x61, 0x37, 0x11, 0x52, 0x4b, 0x61,
+	0x66, 0x26, 0x38, 0x71, 0xf1, 0x07, 0xff, 0xf8, 0xe6, 0xf3, 0x81, 0x39, 0x71, 0xda, 0x7f, 0x95,
+	0xc6, 0xba, 0x2d, 0xa4, 0xd1, 0x63, 0x18, 0xcc, 0x63, 0x1b, 0xb1, 0xaa, 0x6f, 0xe0, 0x85, 0x83,
+	0xd4, 0x42, 0xa0, 0x8d, 0x47, 0x5f, 0xa2, 0xd1, 0x93, 0x68, 0xae, 0x2d, 0xfa, 0xfa, 0xf7, 0x35,
+	0xf5, 0x39, 0xd2, 0x61, 0x84, 0x69, 0x95, 0x4f, 0x23, 0xec, 0x72, 0x41, 0x6a, 0x6e, 0x8d, 0xdd,
+	0xd7, 0x59, 0x73, 0xee, 0xeb, 0xac, 0x6d, 0xd6, 0x1b, 0xf6, 0xb1, 0xb8, 0x4a, 0x07, 0xb8, 0x9a,
+	0x12, 0x03, 0x06, 0xf0, 0xde, 0x0b, 0xd2, 0xd4, 0xe7, 0x64, 0x3e, 0x32, 0x8c, 0x30, 0xb5, 0xf2,
+	0xf1, 0xc2, 0x2e, 0x1f, 0x84, 0x8e, 0xc7, 0x27, 0x94, 0x0e, 0x9b, 0xd0, 0xc7, 0x30, 0xb4, 0xa5,
+	0x59, 0x36, 0x62, 0xac, 0x04, 0x5f, 0x57, 0x48, 0x2d, 0x06, 0x1b, 0x39, 0x67, 0x17, 0xe9, 0x10,
+	0x17, 0x50, 0xfb, 0x1b, 0x41, 0x5f, 0x0a, 0x30, 0x1b, 0x58, 0x4c, 0x45, 0x2b, 0x9e, 0xd7, 0x1c,
+	0x5c, 0x1e, 0x0c, 0x9d, 0xd2, 0x7d, 0x3a, 0xde, 0xa6, 0xf8, 0x7e, 0xd0, 0x94, 0x4e, 0xc2, 0xac,
+	0xb5, 0xae, 0xdd, 0xe7, 0xeb, 0x1e, 0x9b, 0xb5, 0x7e, 0x68, 0xdb, 0x0d, 0x42, 0xf0, 0xe7, 0x02,
+	0xa0, 0xf6, 0x92, 0x2a, 0x5a, 0x72, 0x44, 0x12, 0x82, 0xed, 0x52, 0xa8, 0x9d, 0x93, 0xf2, 0x5d,
+	0x0a, 0xf2, 0x16, 0xba, 0x19, 0xfd, 0x9e, 0x83, 0x81, 0x51, 0xde, 0x02, 0x4b, 0xb2, 0x9c, 0xb7,
+	0xa8, 0x72, 0x6d, 0x1c, 0x6f, 0xa9, 0xbe, 0xf0, 0xf6, 0x13, 0x01, 0x66, 0x03, 0x8b, 0xbb, 0x1c,
+	0x61, 0x54, 0xe1, 0x37, 0x14, 0x21, 0x27, 0x2d, 0xdd, 0x1d, 0x69, 0x5f, 0x09, 0x30, 0x1f, 0x52,
+	0x63, 0x43, 0x97, 0x3d, 0x72, 0x0b, 0xab, 0x14, 0x85, 0xc2, 0xda, 0xa6, 0xb0, 0xf2, 0x62, 0xb6,
+	0x17, 0xe2, 0x8e, 0xe8, 0xa8, 0x84, 0xba, 0x5f, 0x92, 0xaf, 0xbf, 0x80, 0x4a, 0x1b, 0x5a, 0x76,
+	0x44, 0x15, 0x8a, 0x70, 0x25, 0xc2, 0x83, 0x0b, 0xef, 0x3d, 0x0a, 0xf6, 0x2d, 0x74, 0xeb, 0xb4,
+	0x1c, 0x32, 0x80, 0x94, 0xc5, 0x90, 0x6a, 0x1d, 0x67, 0x31, 0xba, 0x96, 0x17, 0xc7, 0x62, 0xaa,
+	0x4f, 0x2c, 0xfe, 0x4c, 0x80, 0xf9, 0x90, 0xca, 0x1f, 0xc7, 0x19, 0x5d, 0x17, 0x0c, 0xc5, 0xc9,
+	0x09, 0x4c, 0x77, 0x4b, 0xe0, 0xef, 0x05, 0xe7, 0x5e, 0x5c, 0x60, 0x79, 0xcd, 0x23, 0xc4, 0xf0,
+	0x32, 0x48, 0x28, 0xb8, 0x1d, 0x0a, 0xae, 0x20, 0xe6, 0x7a, 0x21, 0x51, 0xa3, 0xe3, 0xaa, 0x15,
+	0x42, 0xe3, 0xaf, 0x05, 0x7a, 0xdf, 0x2e, 0x08, 0xaa, 0xe8, 0x88, 0x2d, 0x02, 0xe7, 0xe5, 0x48,
+	0x1f, 0x2e, 0xc9, 0xf7, 0x29, 0xe8, 0xdb, 0xe8, 0xad, 0xd3, 0x32, 0xea, 0x00, 0xa5, 0x9c, 0x86,
+	0x96, 0xa6, 0x38, 0xa7, 0x71, 0xa5, 0xab, 0x38, 0x4e, 0x53, 0x7d, 0xe3, 0xf4, 0x0b, 0x01, 0x2e,
+	0x86, 0x16, 0xba, 0x38, 0xda, 0xb8, 0x42, 0x58, 0x28, 0x5a, 0x4e, 0x66, 0xba, 0x7b, 0x32, 0xff,
+	0x22, 0x38, 0x37, 0x9c, 0x42, 0x4a, 0x68, 0xd7, 0x3c, 0x1a, 0x8d, 0xac, 0xc5, 0x84, 0x82, 0x94,
+	0x28, 0xc8, 0x2d, 0x31, 0xdf, 0x0b, 0xa5, 0x36, 0x1d, 0xba, 0x42, 0x86, 0x26, 0xac, 0xfe, 0x51,
+	0xa0, 0x17, 0xa8, 0xc2, 0xca, 0x7e, 0x8e, 0x10, 0xa3, 0x01, 0xbf, 0x1c, 0xe7, 0xc6, 0x25, 0xbb,
+	0x41, 0x27, 0xf0, 0x2e, 0x7a, 0xe7, 0xb4, 0x2c, 0x7b, 0x40, 0x53, 0xa2, 0xa3, 0xea, 0x66, 0x9c,
+	0xe8, 0x0e, 0x4a, 0x6b, 0x71, 0x44, 0xa7, 0xfa, 0x49, 0xf4, 0x57, 0x82, 0x73, 0x6f, 0x2b, 0x12,
+	0x76, 0x07, 0xb5, 0xba, 0x50, 0xd8, 0x9c, 0xde, 0x74, 0x4f, 0xf4, 0xfe, 0x41, 0x80, 0x54, 0x78,
+	0x1d, 0x0e, 0xbd, 0xec, 0x51, 0x71, 0x44, 0xed, 0x28, 0x14, 0x63, 0x89, 0x62, 0xfc, 0x40, 0xdc,
+	0xec, 0x85, 0xda, 0xfa, 0xb1, 0xca, 0x06, 0x26, 0xc4, 0xfe, 0x56, 0x80, 0xf9, 0x90, 0x6a, 0x1c,
+	0x72, 0x13, 0x69, 0x14, 0xd4, 0x2b, 0xd1, 0x4e, 0x5c, 0xbb, 0x19, 0x0a, 0xfc, 0x1d, 0xf4, 0xf6,
+	0x69, 0xc9, 0x75, 0xc1, 0x52, 0x6a, 0xc3, 0xeb, 0x7a, 0x9c, 0xda, 0xd8, 0xc2, 0x5f, 0x1c, 0xb5,
+	0xa9, 0xfe, 0x51, 0xfb, 0xa5, 0x00, 0xa9, 0xf0, 0x32, 0x21, 0x07, 0x1c, 0x5b, 0x47, 0x0c, 0x05,
+	0xcc, 0x29, 0x4d, 0xf7, 0x48, 0x69, 0x78, 0xb5, 0xa6, 0x45, 0xad, 0x11, 0x15, 0x86, 0xb3, 0x55,
+	0x6b, 0xcd, 0x30, 0x95, 0x2a, 0x19, 0xd8, 0xa3, 0xd6, 0x40, 0xb4, 0xae, 0x5a, 0xa3, 0xa0, 0x5e,
+	0x89, 0x76, 0xea, 0x55, 0xad, 0x2e, 0x58, 0x8f, 0x5a, 0x23, 0xa8, 0x8d, 0x2d, 0x0f, 0x9d, 0xad,
+	0x5a, 0x5b, 0xa8, 0x3d, 0x51, 0x6b, 0x04, 0xe0, 0xd8, 0x6a, 0x53, 0xff, 0xd5, 0x7a, 0x42, 0xe9,
+	0x9f, 0x5c, 0xb5, 0x06, 0xd6, 0xa9, 0xbc, 0x6a, 0x8d, 0xa8, 0x3f, 0x9c, 0xed, 0xfe, 0xe0, 0xa0,
+	0xda, 0x58, 0x6d, 0x34, 0x2b, 0xab, 0x56, 0x93, 0xee, 0xba, 0x7e, 0xc7, 0xf4, 0x1a, 0x88, 0xd7,
+	0xd5, 0x6b, 0x14, 0xd8, 0x2b, 0xd1, 0x4e, 0xbd, 0xee, 0x0c, 0x3c, 0x70, 0x29, 0xbd, 0xe1, 0xf5,
+	0xa1, 0x16, 0xc5, 0xf6, 0x40, 0x6f, 0xaa, 0x9f, 0xf4, 0xfe, 0xca, 0xd5, 0x6c, 0x04, 0xe4, 0xd8,
+	0x8a, 0x54, 0xff, 0x77, 0x04, 0x5e, 0x5a, 0x7f, 0xe3, 0x9e, 0x00, 0xb4, 0x57, 0xb3, 0xbc, 0x27,
+	0x00, 0x61, 0xe5, 0x89, 0x50, 0x74, 0x45, 0x8a, 0xee, 0x9e, 0xb8, 0xd1, 0x0b, 0xa1, 0xca, 0x67,
+	0xd6, 0xaa, 0xc5, 0x8e, 0x29, 0xbf, 0x60, 0x47, 0x00, 0xed, 0x28, 0xdd, 0x23, 0x80, 0x50, 0x88,
+	0x2b, 0x11, 0x1e, 0x5c, 0xa2, 0x77, 0x28, 0xda, 0xb7, 0xd1, 0x9b, 0xa7, 0xe5, 0x92, 0x23, 0xa4,
+	0x3c, 0x86, 0x14, 0x89, 0x5a, 0xce, 0x00, 0xba, 0xe5, 0x31, 0xd5, 0x2f, 0x1e, 0x7f, 0xee, 0x1e,
+	0x02, 0x84, 0x01, 0x8d, 0xae, 0x47, 0x85, 0x02, 0xe5, 0x14, 0xa6, 0xbb, 0xa6, 0xf0, 0x6f, 0x82,
+	0x73, 0xa5, 0x34, 0xa2, 0x8e, 0xf5, 0x9a, 0x57, 0x93, 0x71, 0xe5, 0x88, 0x50, 0xac, 0x1f, 0x52,
+	0xac, 0x92, 0xb8, 0xdd, 0x13, 0xa9, 0x64, 0xf8, 0x55, 0xfe, 0xbf, 0x06, 0x57, 0x2b, 0x4d, 0x4a,
+	0xef, 0xd7, 0x02, 0xbd, 0xb7, 0x1a, 0x31, 0x83, 0x57, 0x5c, 0x35, 0xc6, 0xc2, 0x4f, 0x77, 0xe2,
+	0xca, 0x15, 0x5c, 0xa0, 0x53, 0xda, 0x40, 0x99, 0x53, 0xd3, 0xef, 0x9f, 0x06, 0x7d, 0x11, 0x71,
+	0xe5, 0x25, 0xfe, 0x22, 0x3a, 0xac, 0x42, 0xc5, 0xbd, 0x88, 0x54, 0xff, 0x5f, 0xc4, 0x9f, 0x05,
+	0xe7, 0xea, 0x6c, 0xec, 0x24, 0x3a, 0x2c, 0x6e, 0x85, 0x4e, 0x82, 0x53, 0x9f, 0xee, 0x03, 0xf5,
+	0x3f, 0x14, 0x20, 0xe1, 0xbb, 0xd1, 0x6e, 0x79, 0x0a, 0x0d, 0x01, 0xa0, 0x16, 0x83, 0x8d, 0x5c,
+	0x15, 0x6f, 0x52, 0x68, 0xdf, 0x41, 0xeb, 0xa7, 0x84, 0x96, 0x7d, 0xfb, 0xd1, 0x9b, 0x07, 0x9a,
+	0x7d, 0xd8, 0xac, 0xac, 0x55, 0x8d, 0xfa, 0x7a, 0xc5, 0x34, 0xaa, 0x8a, 0x62, 0xae, 0x57, 0x0f,
+	0x35, 0xb3, 0x61, 0xd9, 0x4a, 0xf5, 0x68, 0x95, 0xc4, 0x3b, 0x30, 0xd6, 0x9f, 0xbc, 0xbe, 0xee,
+	0xfb, 0xbf, 0xda, 0x95, 0x11, 0x4a, 0xcf, 0xeb, 0xff, 0x0d, 0x00, 0x00, 0xff, 0xff, 0x58, 0xcb,
+	0x12, 0x63, 0xc5, 0x3d, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -2891,6 +3946,14 @@ type ApplicationServiceClient interface {
 	UpdateHTTPIntegration(ctx context.Context, in *UpdateHTTPIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	// DeleteIntegration deletes the HTTP application-integration.
 	DeleteHTTPIntegration(ctx context.Context, in *DeleteHTTPIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	// CreateKonkerIntegration creates a Konker application-integration.
+	CreateKonkerIntegration(ctx context.Context, in *CreateKonkerIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	// GetKonkerIntegration returns the Konker application-integration.
+	GetKonkerIntegration(ctx context.Context, in *GetKonkerIntegrationRequest, opts ...grpc.CallOption) (*GetKonkerIntegrationResponse, error)
+	// UpdateKonkerIntegration updates the Konker application-integration.
+	UpdateKonkerIntegration(ctx context.Context, in *UpdateKonkerIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	// DeleteIntegration deletes the Konker application-integration.
+	DeleteKonkerIntegration(ctx context.Context, in *DeleteKonkerIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	// CreateInfluxDBIntegration create an InfluxDB application-integration.
 	CreateInfluxDBIntegration(ctx context.Context, in *CreateInfluxDBIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	// GetInfluxDBIntegration returns the InfluxDB application-integration.
@@ -2923,16 +3986,32 @@ type ApplicationServiceClient interface {
 	UpdateLoRaCloudIntegration(ctx context.Context, in *UpdateLoRaCloudIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	// DeleteLoRaCloudIntegration deletes the LoRaCloud application-integration.
 	DeleteLoRaCloudIntegration(ctx context.Context, in *DeleteLoRaCloudIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	// CreateGCPPubSubIntegration creates a GCP PubSub application-integration.
+	CreateGCPPubSubIntegration(ctx context.Context, in *CreateGCPPubSubIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	// GetGCPPubSubIntegration returns the GCP PubSub application-integration.
+	GetGCPPubSubIntegration(ctx context.Context, in *GetGCPPubSubIntegrationRequest, opts ...grpc.CallOption) (*GetGCPPubSubIntegrationResponse, error)
+	// UpdateGCPPubSubIntegration updates the GCP PubSub application-integration.
+	UpdateGCPPubSubIntegration(ctx context.Context, in *UpdateGCPPubSubIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	// DeleteGCPPubSubIntegration deletes the GCP PubSub application-integration.
+	DeleteGCPPubSubIntegration(ctx context.Context, in *DeleteGCPPubSubIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	// CreateAWSSNSIntegration creates a AWS SNS application-integration.
+	CreateAWSSNSIntegration(ctx context.Context, in *CreateAWSSNSIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	// GetAWSSNSIntegration returns the AWS SNS application-integration.
+	GetAWSSNSIntegration(ctx context.Context, in *GetAWSSNSIntegrationRequest, opts ...grpc.CallOption) (*GetAWSSNSIntegrationResponse, error)
+	// UpdateAWSSNSIntegration updates the AWS SNS application-integration.
+	UpdateAWSSNSIntegration(ctx context.Context, in *UpdateAWSSNSIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	// DeleteAWSSNSIntegration deletes the AWS SNS application-integration.
+	DeleteAWSSNSIntegration(ctx context.Context, in *DeleteAWSSNSIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	// CreateAzureServiceBusIntegration creates an Azure Service-Bus application-integration.
+	CreateAzureServiceBusIntegration(ctx context.Context, in *CreateAzureServiceBusIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	// GetAzureServiceBusIntegration returns the Azure Service-Bus application-integration.
+	GetAzureServiceBusIntegration(ctx context.Context, in *GetAzureServiceBusIntegrationRequest, opts ...grpc.CallOption) (*GetAzureServiceBusIntegrationResponse, error)
+	// UpdateAzureServiceBusIntegration updates the Azure Service-Bus application-integration.
+	UpdateAzureServiceBusIntegration(ctx context.Context, in *UpdateAzureServiceBusIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
+	// DeleteAzureServiceBusIntegration deletes the Azure Service-Bus application-integration.
+	DeleteAzureServiceBusIntegration(ctx context.Context, in *DeleteAzureServiceBusIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 	// ListIntegrations lists all configured integrations.
 	ListIntegrations(ctx context.Context, in *ListIntegrationRequest, opts ...grpc.CallOption) (*ListIntegrationResponse, error)
-	// CreateKonkerIntegration creates A Konker application-integration.
-	CreateKonkerIntegration(ctx context.Context, in *CreateKonkerIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	// GetKonkerIntegration returns the Konker application-integration.
-	GetKonkerIntegration(ctx context.Context, in *GetKonkerIntegrationRequest, opts ...grpc.CallOption) (*GetKonkerIntegrationResponse, error)
-	// UpdateKonkerIntegration updates the Konker application-integration.
-	UpdateKonkerIntegration(ctx context.Context, in *UpdateKonkerIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
-	// DeleteKonkerIntegration deletes the Konker application-integration.
-	DeleteKonkerIntegration(ctx context.Context, in *DeleteKonkerIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error)
 }
 
 type applicationServiceClient struct {
@@ -3018,6 +4097,42 @@ func (c *applicationServiceClient) UpdateHTTPIntegration(ctx context.Context, in
 func (c *applicationServiceClient) DeleteHTTPIntegration(ctx context.Context, in *DeleteHTTPIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
 	out := new(empty.Empty)
 	err := c.cc.Invoke(ctx, "/api.ApplicationService/DeleteHTTPIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) CreateKonkerIntegration(ctx context.Context, in *CreateKonkerIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/CreateKonkerIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) GetKonkerIntegration(ctx context.Context, in *GetKonkerIntegrationRequest, opts ...grpc.CallOption) (*GetKonkerIntegrationResponse, error) {
+	out := new(GetKonkerIntegrationResponse)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/GetKonkerIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) UpdateKonkerIntegration(ctx context.Context, in *UpdateKonkerIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/UpdateKonkerIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) DeleteKonkerIntegration(ctx context.Context, in *DeleteKonkerIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/DeleteKonkerIntegration", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3168,45 +4283,117 @@ func (c *applicationServiceClient) DeleteLoRaCloudIntegration(ctx context.Contex
 	return out, nil
 }
 
+func (c *applicationServiceClient) CreateGCPPubSubIntegration(ctx context.Context, in *CreateGCPPubSubIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/CreateGCPPubSubIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) GetGCPPubSubIntegration(ctx context.Context, in *GetGCPPubSubIntegrationRequest, opts ...grpc.CallOption) (*GetGCPPubSubIntegrationResponse, error) {
+	out := new(GetGCPPubSubIntegrationResponse)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/GetGCPPubSubIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) UpdateGCPPubSubIntegration(ctx context.Context, in *UpdateGCPPubSubIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/UpdateGCPPubSubIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) DeleteGCPPubSubIntegration(ctx context.Context, in *DeleteGCPPubSubIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/DeleteGCPPubSubIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) CreateAWSSNSIntegration(ctx context.Context, in *CreateAWSSNSIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/CreateAWSSNSIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) GetAWSSNSIntegration(ctx context.Context, in *GetAWSSNSIntegrationRequest, opts ...grpc.CallOption) (*GetAWSSNSIntegrationResponse, error) {
+	out := new(GetAWSSNSIntegrationResponse)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/GetAWSSNSIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) UpdateAWSSNSIntegration(ctx context.Context, in *UpdateAWSSNSIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/UpdateAWSSNSIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) DeleteAWSSNSIntegration(ctx context.Context, in *DeleteAWSSNSIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/DeleteAWSSNSIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) CreateAzureServiceBusIntegration(ctx context.Context, in *CreateAzureServiceBusIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/CreateAzureServiceBusIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) GetAzureServiceBusIntegration(ctx context.Context, in *GetAzureServiceBusIntegrationRequest, opts ...grpc.CallOption) (*GetAzureServiceBusIntegrationResponse, error) {
+	out := new(GetAzureServiceBusIntegrationResponse)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/GetAzureServiceBusIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) UpdateAzureServiceBusIntegration(ctx context.Context, in *UpdateAzureServiceBusIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/UpdateAzureServiceBusIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *applicationServiceClient) DeleteAzureServiceBusIntegration(ctx context.Context, in *DeleteAzureServiceBusIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
+	out := new(empty.Empty)
+	err := c.cc.Invoke(ctx, "/api.ApplicationService/DeleteAzureServiceBusIntegration", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *applicationServiceClient) ListIntegrations(ctx context.Context, in *ListIntegrationRequest, opts ...grpc.CallOption) (*ListIntegrationResponse, error) {
 	out := new(ListIntegrationResponse)
 	err := c.cc.Invoke(ctx, "/api.ApplicationService/ListIntegrations", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *applicationServiceClient) CreateKonkerIntegration(ctx context.Context, in *CreateKonkerIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/api.ApplicationService/CreateKonkerIntegration", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *applicationServiceClient) GetKonkerIntegration(ctx context.Context, in *GetKonkerIntegrationRequest, opts ...grpc.CallOption) (*GetKonkerIntegrationResponse, error) {
-	out := new(GetKonkerIntegrationResponse)
-	err := c.cc.Invoke(ctx, "/api.ApplicationService/GetKonkerIntegration", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *applicationServiceClient) UpdateKonkerIntegration(ctx context.Context, in *UpdateKonkerIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/api.ApplicationService/UpdateKonkerIntegration", in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *applicationServiceClient) DeleteKonkerIntegration(ctx context.Context, in *DeleteKonkerIntegrationRequest, opts ...grpc.CallOption) (*empty.Empty, error) {
-	out := new(empty.Empty)
-	err := c.cc.Invoke(ctx, "/api.ApplicationService/DeleteKonkerIntegration", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3233,6 +4420,14 @@ type ApplicationServiceServer interface {
 	UpdateHTTPIntegration(context.Context, *UpdateHTTPIntegrationRequest) (*empty.Empty, error)
 	// DeleteIntegration deletes the HTTP application-integration.
 	DeleteHTTPIntegration(context.Context, *DeleteHTTPIntegrationRequest) (*empty.Empty, error)
+	// CreateKonkerIntegration creates a Konker application-integration.
+	CreateKonkerIntegration(context.Context, *CreateKonkerIntegrationRequest) (*empty.Empty, error)
+	// GetKonkerIntegration returns the Konker application-integration.
+	GetKonkerIntegration(context.Context, *GetKonkerIntegrationRequest) (*GetKonkerIntegrationResponse, error)
+	// UpdateKonkerIntegration updates the Konker application-integration.
+	UpdateKonkerIntegration(context.Context, *UpdateKonkerIntegrationRequest) (*empty.Empty, error)
+	// DeleteIntegration deletes the Konker application-integration.
+	DeleteKonkerIntegration(context.Context, *DeleteKonkerIntegrationRequest) (*empty.Empty, error)
 	// CreateInfluxDBIntegration create an InfluxDB application-integration.
 	CreateInfluxDBIntegration(context.Context, *CreateInfluxDBIntegrationRequest) (*empty.Empty, error)
 	// GetInfluxDBIntegration returns the InfluxDB application-integration.
@@ -3265,16 +4460,32 @@ type ApplicationServiceServer interface {
 	UpdateLoRaCloudIntegration(context.Context, *UpdateLoRaCloudIntegrationRequest) (*empty.Empty, error)
 	// DeleteLoRaCloudIntegration deletes the LoRaCloud application-integration.
 	DeleteLoRaCloudIntegration(context.Context, *DeleteLoRaCloudIntegrationRequest) (*empty.Empty, error)
+	// CreateGCPPubSubIntegration creates a GCP PubSub application-integration.
+	CreateGCPPubSubIntegration(context.Context, *CreateGCPPubSubIntegrationRequest) (*empty.Empty, error)
+	// GetGCPPubSubIntegration returns the GCP PubSub application-integration.
+	GetGCPPubSubIntegration(context.Context, *GetGCPPubSubIntegrationRequest) (*GetGCPPubSubIntegrationResponse, error)
+	// UpdateGCPPubSubIntegration updates the GCP PubSub application-integration.
+	UpdateGCPPubSubIntegration(context.Context, *UpdateGCPPubSubIntegrationRequest) (*empty.Empty, error)
+	// DeleteGCPPubSubIntegration deletes the GCP PubSub application-integration.
+	DeleteGCPPubSubIntegration(context.Context, *DeleteGCPPubSubIntegrationRequest) (*empty.Empty, error)
+	// CreateAWSSNSIntegration creates a AWS SNS application-integration.
+	CreateAWSSNSIntegration(context.Context, *CreateAWSSNSIntegrationRequest) (*empty.Empty, error)
+	// GetAWSSNSIntegration returns the AWS SNS application-integration.
+	GetAWSSNSIntegration(context.Context, *GetAWSSNSIntegrationRequest) (*GetAWSSNSIntegrationResponse, error)
+	// UpdateAWSSNSIntegration updates the AWS SNS application-integration.
+	UpdateAWSSNSIntegration(context.Context, *UpdateAWSSNSIntegrationRequest) (*empty.Empty, error)
+	// DeleteAWSSNSIntegration deletes the AWS SNS application-integration.
+	DeleteAWSSNSIntegration(context.Context, *DeleteAWSSNSIntegrationRequest) (*empty.Empty, error)
+	// CreateAzureServiceBusIntegration creates an Azure Service-Bus application-integration.
+	CreateAzureServiceBusIntegration(context.Context, *CreateAzureServiceBusIntegrationRequest) (*empty.Empty, error)
+	// GetAzureServiceBusIntegration returns the Azure Service-Bus application-integration.
+	GetAzureServiceBusIntegration(context.Context, *GetAzureServiceBusIntegrationRequest) (*GetAzureServiceBusIntegrationResponse, error)
+	// UpdateAzureServiceBusIntegration updates the Azure Service-Bus application-integration.
+	UpdateAzureServiceBusIntegration(context.Context, *UpdateAzureServiceBusIntegrationRequest) (*empty.Empty, error)
+	// DeleteAzureServiceBusIntegration deletes the Azure Service-Bus application-integration.
+	DeleteAzureServiceBusIntegration(context.Context, *DeleteAzureServiceBusIntegrationRequest) (*empty.Empty, error)
 	// ListIntegrations lists all configured integrations.
 	ListIntegrations(context.Context, *ListIntegrationRequest) (*ListIntegrationResponse, error)
-	// CreateKonkerIntegration creates A Konker application-integration.
-	CreateKonkerIntegration(context.Context, *CreateKonkerIntegrationRequest) (*empty.Empty, error)
-	// GetKonkerIntegration returns the Konker application-integration.
-	GetKonkerIntegration(context.Context, *GetKonkerIntegrationRequest) (*GetKonkerIntegrationResponse, error)
-	// UpdateKonkerIntegration updates the Konker application-integration.
-	UpdateKonkerIntegration(context.Context, *UpdateKonkerIntegrationRequest) (*empty.Empty, error)
-	// DeleteKonkerIntegration deletes the Konker application-integration.
-	DeleteKonkerIntegration(context.Context, *DeleteKonkerIntegrationRequest) (*empty.Empty, error)
 }
 
 // UnimplementedApplicationServiceServer can be embedded to have forward compatible implementations.
@@ -3307,6 +4518,18 @@ func (*UnimplementedApplicationServiceServer) UpdateHTTPIntegration(ctx context.
 }
 func (*UnimplementedApplicationServiceServer) DeleteHTTPIntegration(ctx context.Context, req *DeleteHTTPIntegrationRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteHTTPIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) CreateKonkerIntegration(ctx context.Context, req *CreateKonkerIntegrationRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateKonkerIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) GetKonkerIntegration(ctx context.Context, req *GetKonkerIntegrationRequest) (*GetKonkerIntegrationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetKonkerIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) UpdateKonkerIntegration(ctx context.Context, req *UpdateKonkerIntegrationRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateKonkerIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) DeleteKonkerIntegration(ctx context.Context, req *DeleteKonkerIntegrationRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteKonkerIntegration not implemented")
 }
 func (*UnimplementedApplicationServiceServer) CreateInfluxDBIntegration(ctx context.Context, req *CreateInfluxDBIntegrationRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CreateInfluxDBIntegration not implemented")
@@ -3356,20 +4579,44 @@ func (*UnimplementedApplicationServiceServer) UpdateLoRaCloudIntegration(ctx con
 func (*UnimplementedApplicationServiceServer) DeleteLoRaCloudIntegration(ctx context.Context, req *DeleteLoRaCloudIntegrationRequest) (*empty.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteLoRaCloudIntegration not implemented")
 }
+func (*UnimplementedApplicationServiceServer) CreateGCPPubSubIntegration(ctx context.Context, req *CreateGCPPubSubIntegrationRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateGCPPubSubIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) GetGCPPubSubIntegration(ctx context.Context, req *GetGCPPubSubIntegrationRequest) (*GetGCPPubSubIntegrationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetGCPPubSubIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) UpdateGCPPubSubIntegration(ctx context.Context, req *UpdateGCPPubSubIntegrationRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateGCPPubSubIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) DeleteGCPPubSubIntegration(ctx context.Context, req *DeleteGCPPubSubIntegrationRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteGCPPubSubIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) CreateAWSSNSIntegration(ctx context.Context, req *CreateAWSSNSIntegrationRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAWSSNSIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) GetAWSSNSIntegration(ctx context.Context, req *GetAWSSNSIntegrationRequest) (*GetAWSSNSIntegrationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAWSSNSIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) UpdateAWSSNSIntegration(ctx context.Context, req *UpdateAWSSNSIntegrationRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAWSSNSIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) DeleteAWSSNSIntegration(ctx context.Context, req *DeleteAWSSNSIntegrationRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAWSSNSIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) CreateAzureServiceBusIntegration(ctx context.Context, req *CreateAzureServiceBusIntegrationRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateAzureServiceBusIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) GetAzureServiceBusIntegration(ctx context.Context, req *GetAzureServiceBusIntegrationRequest) (*GetAzureServiceBusIntegrationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAzureServiceBusIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) UpdateAzureServiceBusIntegration(ctx context.Context, req *UpdateAzureServiceBusIntegrationRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateAzureServiceBusIntegration not implemented")
+}
+func (*UnimplementedApplicationServiceServer) DeleteAzureServiceBusIntegration(ctx context.Context, req *DeleteAzureServiceBusIntegrationRequest) (*empty.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteAzureServiceBusIntegration not implemented")
+}
 func (*UnimplementedApplicationServiceServer) ListIntegrations(ctx context.Context, req *ListIntegrationRequest) (*ListIntegrationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method ListIntegrations not implemented")
-}
-func (*UnimplementedApplicationServiceServer) CreateKonkerIntegration(ctx context.Context, req *CreateKonkerIntegrationRequest) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method CreateKonkerIntegration not implemented")
-}
-func (*UnimplementedApplicationServiceServer) GetKonkerIntegration(ctx context.Context, req *GetKonkerIntegrationRequest) (*GetKonkerIntegrationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetKonkerIntegration not implemented")
-}
-func (*UnimplementedApplicationServiceServer) UpdateKonkerIntegration(ctx context.Context, req *UpdateKonkerIntegrationRequest) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateKonkerIntegration not implemented")
-}
-func (*UnimplementedApplicationServiceServer) DeleteKonkerIntegration(ctx context.Context, req *DeleteKonkerIntegrationRequest) (*empty.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method DeleteKonkerIntegration not implemented")
 }
 
 func RegisterApplicationServiceServer(s *grpc.Server, srv ApplicationServiceServer) {
@@ -3534,6 +4781,78 @@ func _ApplicationService_DeleteHTTPIntegration_Handler(srv interface{}, ctx cont
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ApplicationServiceServer).DeleteHTTPIntegration(ctx, req.(*DeleteHTTPIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_CreateKonkerIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateKonkerIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).CreateKonkerIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/CreateKonkerIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).CreateKonkerIntegration(ctx, req.(*CreateKonkerIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_GetKonkerIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetKonkerIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).GetKonkerIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/GetKonkerIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).GetKonkerIntegration(ctx, req.(*GetKonkerIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_UpdateKonkerIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateKonkerIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).UpdateKonkerIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/UpdateKonkerIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).UpdateKonkerIntegration(ctx, req.(*UpdateKonkerIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_DeleteKonkerIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteKonkerIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).DeleteKonkerIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/DeleteKonkerIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).DeleteKonkerIntegration(ctx, req.(*DeleteKonkerIntegrationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3826,6 +5145,222 @@ func _ApplicationService_DeleteLoRaCloudIntegration_Handler(srv interface{}, ctx
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ApplicationService_CreateGCPPubSubIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateGCPPubSubIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).CreateGCPPubSubIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/CreateGCPPubSubIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).CreateGCPPubSubIntegration(ctx, req.(*CreateGCPPubSubIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_GetGCPPubSubIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetGCPPubSubIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).GetGCPPubSubIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/GetGCPPubSubIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).GetGCPPubSubIntegration(ctx, req.(*GetGCPPubSubIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_UpdateGCPPubSubIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateGCPPubSubIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).UpdateGCPPubSubIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/UpdateGCPPubSubIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).UpdateGCPPubSubIntegration(ctx, req.(*UpdateGCPPubSubIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_DeleteGCPPubSubIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteGCPPubSubIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).DeleteGCPPubSubIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/DeleteGCPPubSubIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).DeleteGCPPubSubIntegration(ctx, req.(*DeleteGCPPubSubIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_CreateAWSSNSIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAWSSNSIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).CreateAWSSNSIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/CreateAWSSNSIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).CreateAWSSNSIntegration(ctx, req.(*CreateAWSSNSIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_GetAWSSNSIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAWSSNSIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).GetAWSSNSIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/GetAWSSNSIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).GetAWSSNSIntegration(ctx, req.(*GetAWSSNSIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_UpdateAWSSNSIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAWSSNSIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).UpdateAWSSNSIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/UpdateAWSSNSIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).UpdateAWSSNSIntegration(ctx, req.(*UpdateAWSSNSIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_DeleteAWSSNSIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAWSSNSIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).DeleteAWSSNSIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/DeleteAWSSNSIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).DeleteAWSSNSIntegration(ctx, req.(*DeleteAWSSNSIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_CreateAzureServiceBusIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAzureServiceBusIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).CreateAzureServiceBusIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/CreateAzureServiceBusIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).CreateAzureServiceBusIntegration(ctx, req.(*CreateAzureServiceBusIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_GetAzureServiceBusIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAzureServiceBusIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).GetAzureServiceBusIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/GetAzureServiceBusIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).GetAzureServiceBusIntegration(ctx, req.(*GetAzureServiceBusIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_UpdateAzureServiceBusIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateAzureServiceBusIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).UpdateAzureServiceBusIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/UpdateAzureServiceBusIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).UpdateAzureServiceBusIntegration(ctx, req.(*UpdateAzureServiceBusIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ApplicationService_DeleteAzureServiceBusIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteAzureServiceBusIntegrationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ApplicationServiceServer).DeleteAzureServiceBusIntegration(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.ApplicationService/DeleteAzureServiceBusIntegration",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ApplicationServiceServer).DeleteAzureServiceBusIntegration(ctx, req.(*DeleteAzureServiceBusIntegrationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _ApplicationService_ListIntegrations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListIntegrationRequest)
 	if err := dec(in); err != nil {
@@ -3840,78 +5375,6 @@ func _ApplicationService_ListIntegrations_Handler(srv interface{}, ctx context.C
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(ApplicationServiceServer).ListIntegrations(ctx, req.(*ListIntegrationRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ApplicationService_CreateKonkerIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(CreateKonkerIntegrationRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApplicationServiceServer).CreateKonkerIntegration(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.ApplicationService/CreateKonkerIntegration",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApplicationServiceServer).CreateKonkerIntegration(ctx, req.(*CreateKonkerIntegrationRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ApplicationService_GetKonkerIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetKonkerIntegrationRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApplicationServiceServer).GetKonkerIntegration(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.ApplicationService/GetKonkerIntegration",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApplicationServiceServer).GetKonkerIntegration(ctx, req.(*GetKonkerIntegrationRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ApplicationService_UpdateKonkerIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateKonkerIntegrationRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApplicationServiceServer).UpdateKonkerIntegration(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.ApplicationService/UpdateKonkerIntegration",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApplicationServiceServer).UpdateKonkerIntegration(ctx, req.(*UpdateKonkerIntegrationRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _ApplicationService_DeleteKonkerIntegration_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(DeleteKonkerIntegrationRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(ApplicationServiceServer).DeleteKonkerIntegration(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: "/api.ApplicationService/DeleteKonkerIntegration",
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(ApplicationServiceServer).DeleteKonkerIntegration(ctx, req.(*DeleteKonkerIntegrationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3955,6 +5418,22 @@ var _ApplicationService_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteHTTPIntegration",
 			Handler:    _ApplicationService_DeleteHTTPIntegration_Handler,
+		},
+		{
+			MethodName: "CreateKonkerIntegration",
+			Handler:    _ApplicationService_CreateKonkerIntegration_Handler,
+		},
+		{
+			MethodName: "GetKonkerIntegration",
+			Handler:    _ApplicationService_GetKonkerIntegration_Handler,
+		},
+		{
+			MethodName: "UpdateKonkerIntegration",
+			Handler:    _ApplicationService_UpdateKonkerIntegration_Handler,
+		},
+		{
+			MethodName: "DeleteKonkerIntegration",
+			Handler:    _ApplicationService_DeleteKonkerIntegration_Handler,
 		},
 		{
 			MethodName: "CreateInfluxDBIntegration",
@@ -4021,24 +5500,56 @@ var _ApplicationService_serviceDesc = grpc.ServiceDesc{
 			Handler:    _ApplicationService_DeleteLoRaCloudIntegration_Handler,
 		},
 		{
+			MethodName: "CreateGCPPubSubIntegration",
+			Handler:    _ApplicationService_CreateGCPPubSubIntegration_Handler,
+		},
+		{
+			MethodName: "GetGCPPubSubIntegration",
+			Handler:    _ApplicationService_GetGCPPubSubIntegration_Handler,
+		},
+		{
+			MethodName: "UpdateGCPPubSubIntegration",
+			Handler:    _ApplicationService_UpdateGCPPubSubIntegration_Handler,
+		},
+		{
+			MethodName: "DeleteGCPPubSubIntegration",
+			Handler:    _ApplicationService_DeleteGCPPubSubIntegration_Handler,
+		},
+		{
+			MethodName: "CreateAWSSNSIntegration",
+			Handler:    _ApplicationService_CreateAWSSNSIntegration_Handler,
+		},
+		{
+			MethodName: "GetAWSSNSIntegration",
+			Handler:    _ApplicationService_GetAWSSNSIntegration_Handler,
+		},
+		{
+			MethodName: "UpdateAWSSNSIntegration",
+			Handler:    _ApplicationService_UpdateAWSSNSIntegration_Handler,
+		},
+		{
+			MethodName: "DeleteAWSSNSIntegration",
+			Handler:    _ApplicationService_DeleteAWSSNSIntegration_Handler,
+		},
+		{
+			MethodName: "CreateAzureServiceBusIntegration",
+			Handler:    _ApplicationService_CreateAzureServiceBusIntegration_Handler,
+		},
+		{
+			MethodName: "GetAzureServiceBusIntegration",
+			Handler:    _ApplicationService_GetAzureServiceBusIntegration_Handler,
+		},
+		{
+			MethodName: "UpdateAzureServiceBusIntegration",
+			Handler:    _ApplicationService_UpdateAzureServiceBusIntegration_Handler,
+		},
+		{
+			MethodName: "DeleteAzureServiceBusIntegration",
+			Handler:    _ApplicationService_DeleteAzureServiceBusIntegration_Handler,
+		},
+		{
 			MethodName: "ListIntegrations",
 			Handler:    _ApplicationService_ListIntegrations_Handler,
-		},
-		{
-			MethodName: "CreateKonkerIntegration",
-			Handler:    _ApplicationService_CreateKonkerIntegration_Handler,
-		},
-		{
-			MethodName: "GetKonkerIntegration",
-			Handler:    _ApplicationService_GetKonkerIntegration_Handler,
-		},
-		{
-			MethodName: "UpdateKonkerIntegration",
-			Handler:    _ApplicationService_UpdateKonkerIntegration_Handler,
-		},
-		{
-			MethodName: "DeleteKonkerIntegration",
-			Handler:    _ApplicationService_DeleteKonkerIntegration_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
