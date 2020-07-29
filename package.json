@@ -1,5 +1,5 @@
 {
-  "name": "chirpstack-api",
+  "name": "@GaiaFL/chirpstack-api",
   "version": "1.0.0",
   "description": "This repository contains the [Protobuf](https://developers.google.com/protocol-buffers/) and [gRPC](https://grpc.io/) API definitions for the [ChirpStack](https://www.chirpstack.io) components.",
   "main": "index.js",
